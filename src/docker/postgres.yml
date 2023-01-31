@@ -1,0 +1,11 @@
+version: '2'
+services:
+  robo20-postgresql:
+    image: postgres:11.5
+    container_name: roboAnalise-postgresql
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=roboAnalise
+    ports:
+      - 5432:5432
