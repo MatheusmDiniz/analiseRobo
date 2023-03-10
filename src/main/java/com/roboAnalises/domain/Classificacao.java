@@ -12,54 +12,54 @@ import lombok.Setter;
 public class Classificacao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "time")
     private String time;
 
     @Column(name = "gols_feitos")
-    private Integer golsFeitos = 0;
+    private Long golsFeitos = 0L;
 
     @Column(name = "gols_levados")
-    private Integer golsLevados = 0;
+    private Long golsLevados = 0L;
 
     @Column(name = "quantidade_over25")
-    private Integer quantidadeOver25 = 0;
+    private Long quantidadeOver25 = 0L;
 
     @Column(name = "quantidade_under25")
-    private Integer quantidadeUnder25 = 0;
+    private Long quantidadeUnder25 = 0L;
 
     @Column(name = "ambas_marcam")
-    private Integer ambasMarcam = 0;
+    private Long ambasMarcam = 0L;
 
     @Column(name = "liga")
     private String liga;
 
-    public void setGolsFeitos(Integer golsFeitos) {
+    public void setGolsFeitos(Long golsFeitos) {
         this.golsFeitos += golsFeitos;
     }
 
-    public void setGolsLevados(Integer golsLevados) {
+    public void setGolsLevados(Long golsLevados) {
         this.golsLevados += golsLevados;
     }
 
-    public void setQuantidadeOver25(Integer quantidadeOver25) {
+    public void setQuantidadeOver25(Long quantidadeOver25) {
         this.quantidadeOver25 += quantidadeOver25;
     }
 
-    public void setQuantidadeUnder25(Integer quantidadeUnder25) {
+    public void setQuantidadeUnder25(Long quantidadeUnder25) {
         this.quantidadeUnder25 += quantidadeUnder25;
     }
 
-    public void setAmbasMarcam(Integer ambasMarcam) {
+    public void setAmbasMarcam(Long ambasMarcam) {
         this.ambasMarcam += ambasMarcam;
     }
 
     public void reseta(){
-        this.golsFeitos =0;
-        this.golsLevados = 0;
-        this.quantidadeOver25 = 0;
-        this.quantidadeUnder25 = 0;
-        this.ambasMarcam = 0;
+        this.golsFeitos =0L;
+        this.golsLevados = 0L;
+        this.quantidadeOver25 = 0L;
+        this.quantidadeUnder25 = 0L;
+        this.ambasMarcam = 0L;
     }
 }

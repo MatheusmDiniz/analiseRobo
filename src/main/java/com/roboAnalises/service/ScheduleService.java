@@ -2,6 +2,7 @@ package com.roboAnalises.service;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.roboAnalises.domain.enums.LigasEnum;
+import com.roboAnalises.service.teste.TestePadrao;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -20,6 +21,7 @@ public class ScheduleService {
     private static final Integer OITO_MINUTOS = 480000;
     private static final Integer DEZ_MINUTOS = 600000;
     private static final Integer VINTE_MINUTOS = 1200000;
+    private static final Integer QUINZE_MINUTOS = 900000;
 
     @Autowired
     private final VerificarPadroesService verificarPadroesService;
@@ -36,19 +38,33 @@ public class ScheduleService {
     @Autowired
     private final InformacoesService informacoesService;
 
-    @Scheduled(fixedDelay = 600000)
+    @Autowired
+    private final TestePadrao testePadrao;
+
+    @Autowired
+    private final EntradasService entradasService;
+
+    @Scheduled(fixedDelay = 900000)
     public void verificarPadroes(){
         System.out.println("Rodando Verificar Padroes");
         verificarPadroesService.verificarPadroes();
+
     }
 
-     @Scheduled(fixedDelay = 60000)
+
+    @Scheduled(fixedDelay = 60000)
     public void principal(){
         System.out.println("Rodando O robo");
         roboService.iniciarRobo();
     }
 
+    @Scheduled(fixedDelay = 300000)
+    public void verificarEntradasFinalizadas(){
+        System.out.println("VerificarEntradas");
+        entradasService.verificarEntradasNaoFinalizadasFinalizadas();
+    }
 
+//////////////////////////////////////////////////////
 
 //    @Scheduled(fixedDelay = 10000)
 //    public void testeTelegram() throws UnirestException {
@@ -67,5 +83,11 @@ public class ScheduleService {
 ////        informacoesService.getMediaOverUltimas8Linhas(LigasEnum.getLiga("EURO"));
 //        informacoesService.getMelhoresLigas();
 //
+//    }
+
+//    @Scheduled(fixedDelay = 2000)
+//    public void testarPadroes(){
+//        System.out.println("Testando Padrão");
+//        testePadrao.testePadrao();
 //    }
 }

@@ -6,8 +6,10 @@ import com.roboAnalises.domain.Entradas;
 import com.roboAnalises.domain.enums.LigasEnum;
 import com.roboAnalises.domain.enums.TipoEntrada;
 import com.roboAnalises.domain.vstats.Jogos;
+import com.roboAnalises.util.Data;
 import com.roboAnalises.util.Token;
 import com.roboAnalises.util.Util;
+import lombok.AllArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,9 +18,9 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.List;
-import java.util.Locale;
 
 @Service
+@AllArgsConstructor
 public class TelegramService {
 
     @Autowired
@@ -49,7 +51,6 @@ public class TelegramService {
 
         LocalTime lt = LocalTime.of(jogo.getHour(), jogo.getMinute(),0);
 
-
         int m1 = 0;
         int m2 = 0;
         int m3 = 0;
@@ -68,6 +69,11 @@ public class TelegramService {
             m1 = lt.plusMinutes(15).getMinute();
             m2 = lt.plusMinutes(18).getMinute();
             m3 = lt.plusMinutes(21).getMinute();
+            lt = lt.plusMinutes(21);
+        }
+
+        if(lt.getHour() != Data.getHoraAtualLondon()){
+            return;
         }
 
         lt = lt.minusMinutes(3);
@@ -78,31 +84,46 @@ public class TelegramService {
         String hora = String.valueOf(hour);
         String minutos = m1 + "-" + m2 + "-" + m3;
 
-//        if(m3 >= 0 && m3 <= 8){
-//            return;
-//        }
+        if(m3 >= 0 && m3 <= 8){
+            return;
+        }
 
         StringBuilder mensagemTelegram = Util.montarMensagemTelegram(liga, minutos, aposta);
         mensagemTelegram.append("\n-----------------------\n");
         mensagemTelegram.append(classificacaoService.getTimesOver25AndAmbasMarcam(LigasEnum.getLiga(liga)));
 
-        List<Jogos> jogos = new ApiVsStatsService(LigasEnum.getLiga(liga).getNomeOficial()).getLast200Jogos();
-        mensagemTelegram.append(informacoesService.getMediaOverUltimas8Linhas(LigasEnum.getLiga(liga), jogos));
-        mensagemTelegram.append(informacoesService.getMediaUltimasLinhasEPorQuadrante(LigasEnum.getLiga(liga), jogos));
-        mensagemTelegram.append(informacoesService.getMelhoresLigas());
+        List<Jogos> ultimos200Jogos = new ApiVsStatsService(LigasEnum.getLiga(liga).getNomeOficial()).getLast200Jogos();
+
+        if(RestricoesEntradasService.returnTrueIfVerificarMais3RedsSeguidosUltimaHora(ultimos200Jogos, aposta)){
+            return;
+        }
+
+        List<Jogos> jogos = new ApiVsStatsService().getUltimosJogosTodasLigas();
+        Double mediaOver25 = informacoesService.getMediaOverUltimas3Horas(LigasEnum.getLiga(liga), jogos);
+        Double mediaAmbas = informacoesService.getMediaAmbasUltimas3Horas(LigasEnum.getLiga(liga), jogos);
+        mensagemTelegram.append("\nMedia Over 2.5 nas ultimas 3 horas: " + mediaOver25+"\n");
+        mensagemTelegram.append("\nMedia Ambas nas ultimas 3 horas: " + mediaAmbas+"\n");
+
+        if(RestricoesEntradasService.returnTrueIfVerificarHoraComMaisOverOuAmbasQueAMedia(ultimos200Jogos, aposta, mediaOver25, mediaAmbas)){
+            return;
+        }
+
+        mensagemTelegram.append(informacoesService.getMediaUltimasLinhasEPorQuadrante(LigasEnum.getLiga(liga), ultimos200Jogos));
+        mensagemTelegram.append(informacoesService.getMelhoresLigasOver25Ultimas10Horas(jogos));
+        mensagemTelegram.append(informacoesService.getMelhoresLigasAmbasUltimas10Horas(jogos));
 
         Entradas entrada = new Entradas();
         entrada.setLiga(liga);
         entrada.setHora(hora);
         entrada.setMinutos(minutos);
         entrada.setAposta(aposta);
-        entrada.setData(LocalDate.now(ZoneId.of("America/Sao_Paulo")).toString());
+        entrada.setData(LocalDate.now(ZoneId.of("Europe/London")).toString());
 
         if(entradasService.verificarEntradaDuplicada(entrada)){
             try {
                 JSONObject retornoEnvioMensagem =  sendMessage(mensagemTelegram.toString());
 
-                entrada.setIdMessage((Integer) retornoEnvioMensagem.get("message_id"));
+                entrada.setIdMessage(Long.valueOf((Integer) retornoEnvioMensagem.get("message_id")));
                 entrada.setFlagFinalizado(false);
                 entrada.setFlagGrem(false);
                 entradasService.salvarEntrada(entrada);

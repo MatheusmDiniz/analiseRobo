@@ -7,8 +7,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Tendencia {
-    private Long hora;
-    private Long gols;
-    private Double mediaGols;
+public class Score {
+    private int home;
+    private int away;
 }

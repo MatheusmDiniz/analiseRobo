@@ -10,7 +10,7 @@ import java.util.List;
 
 
 @Repository
-public interface AnalisePadraoRepository extends JpaRepository<AnalisePadroes, Integer>, JpaSpecificationExecutor<AnalisePadroes> {
+public interface AnalisePadraoRepository extends JpaRepository<AnalisePadroes, Long>, JpaSpecificationExecutor<AnalisePadroes> {
 
     @Query(value = "SELECT a FROM AnalisePadroes a WHERE a.isPorcentagemBoa = true ORDER BY a.estatisticas.total DESC")
     List<AnalisePadroes> findByisPorcentagemBoaIsTrue();

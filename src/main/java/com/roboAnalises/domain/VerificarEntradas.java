@@ -14,17 +14,17 @@ public class VerificarEntradas {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     private String liga;
     private String hora;
     private String minutos;
     private String aposta;
-    private Integer idMessage;
+    private Long idMessage;
     private Boolean flagFinalizado;
     private Boolean flagGrem;
     private String padrao;
-    private Integer minuto1;
-    private Integer minuto2;
-    private Integer minuto3;
+    private Long minuto1;
+    private Long minuto2;
+    private Long minuto3;
 
 }

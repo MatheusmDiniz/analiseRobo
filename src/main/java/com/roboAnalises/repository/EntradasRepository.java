@@ -11,7 +11,7 @@ import java.util.List;
 
 @Repository
 public interface EntradasRepository extends JpaRepository<Entradas, Integer>, JpaSpecificationExecutor<Entradas> {
-    Entradas findByLigaAndHoraAndMinutosAndAposta(String liga, String hora, String minutos, String aposta);
+    Entradas findByLigaAndHoraAndMinutosAndApostaAndData(String liga, String hora, String minutos, String aposta, String data);
 
     @Query(value = "SELECT e FROM Entradas e WHERE e.flagFinalizado = false OR e.flagGrem = false")
     List<Entradas> findEntradasAndNotFinalizadas();
@@ -20,5 +20,8 @@ public interface EntradasRepository extends JpaRepository<Entradas, Integer>, Jp
     Entradas findByLigaAndApostaAndFlagFinalizado(@Param("liga") String liga, @Param("aposta") String aposta);
 
     @Query(value = "SELECT count(e) FROM Entradas e WHERE e.flagFinalizado = false")
-    Long findEntradasNaoFinalizadas();
+    Long countFindEntradasNaoFinalizadas();
+
+    @Query(value = "SELECT e FROM Entradas e WHERE e.flagFinalizado = false")
+    List<Entradas> findEntradasNaoFinalizadas();
 }

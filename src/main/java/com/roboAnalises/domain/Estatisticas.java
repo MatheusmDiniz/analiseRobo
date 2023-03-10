@@ -13,13 +13,13 @@ import lombok.Setter;
 @Embeddable
 public class Estatisticas {
 
-    private Integer contEntradas = 0;
-    private Integer contGrens = 0;
-    private Integer contReds = 0;
+    private Long contEntradas = 0L;
+    private Long contGrens = 0L;
+    private Long contReds = 0L;
     private Double total = Double.valueOf(0);
 
 
-    public void addEntradas(int a){
+    public void addEntradas(Long a){
         if(this.contEntradas < 1){
             this.contEntradas = a;
         }else{
@@ -27,7 +27,7 @@ public class Estatisticas {
         }
     }
 
-    public void addGrens(int a){
+    public void addGrens(Long a){
         if(this.contGrens < 1){
             this.contGrens = a;
         }else{
@@ -35,7 +35,7 @@ public class Estatisticas {
         }
     }
 
-    public void addRed(int a){
+    public void addRed(Long a){
         if(this.contReds < 1){
             this.contReds = a;
         }else{

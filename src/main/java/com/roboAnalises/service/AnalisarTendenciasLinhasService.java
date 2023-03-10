@@ -20,8 +20,8 @@ public class AnalisarTendenciasLinhasService {
 
         for (Integer hora : horas) {
             Tendencia t = new Tendencia();
-            t.setHora(hora);
-            t.setGols(0);
+            t.setHora(Long.valueOf(hora));
+            t.setGols(0L);
             for (Jogos lastGame : last200Jogos) {
                 if(lastGame.getHour() == hora){
                     t.setGols(t.getGols() + lastGame.getScoreFullTime().away + lastGame.getScoreFullTime().home);
@@ -30,7 +30,7 @@ public class AnalisarTendenciasLinhasService {
             tendencias.add(t);
         }
 
-        Integer totalGols = 0;
+        Long totalGols = 0L;
 
         for (Tendencia tendencia : tendencias) {
             totalGols += tendencia.getGols();

@@ -5,4 +5,5 @@ public class TipoEntrada {
     public final static String CIMA_MAIS_UM = "cimaMaisUm";
 
     public final static String QUINTO_JOGO = "quintoJogo";
+    public final static String QUINTO_JOGO_HORA_ANTERIOR = "quintoJogoHoraAnterior";
 }

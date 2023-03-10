@@ -11,10 +11,11 @@ public class AnalisePadroes {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     private String padrao;
     private String liga;
     private Boolean isPorcentagemBoa;
+    private String tipoEntrada;
 
     @Embedded
     private Estatisticas estatisticas;

@@ -8,12 +8,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Informacoes {
-    Integer hora = 0;
-    Integer quantidadeOver25 = 0;
+    Long hora = 0L;
+    Long quantidadeOver25 = 0L;
 
     String liga;
 
-    public void addQuantidadeOver25(Integer quantidadeOver25){
+    public void addQuantidadeOver25(Long quantidadeOver25){
         this.quantidadeOver25 += quantidadeOver25;
     }
 

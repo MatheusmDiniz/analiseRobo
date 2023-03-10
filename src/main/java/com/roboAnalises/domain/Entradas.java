@@ -14,12 +14,12 @@ public class Entradas {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
     private String liga;
     private String hora;
     private String minutos;
     private String aposta;
-    private Integer idMessage;
+    private Long idMessage;
     private Boolean flagFinalizado;
     private Boolean flagGrem;
     private String data;

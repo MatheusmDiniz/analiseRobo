@@ -43,7 +43,7 @@ public class ClassificacaoService {
         StringBuilder sb = new StringBuilder();
         sb.append("TIMES ACIMA DA MEDIA OVER 2.5");
         sb.append("\n");
-        classificacaos.sort((c1, c2) -> Integer.compare(c2.getQuantidadeOver25(), c1.getQuantidadeOver25()));
+        classificacaos.sort((c1, c2) -> Long.compare(c2.getQuantidadeOver25(), c1.getQuantidadeOver25()));
         for (Classificacao classificacao : classificacaos) {
             if(classificacao.getQuantidadeOver25() > mediaOver25){
                 sb.append(classificacao.getTime() + " - " + classificacao.getQuantidadeOver25());
@@ -53,7 +53,7 @@ public class ClassificacaoService {
 
         mediaAmbas = (mediaAmbas/classificacaos.size());
 
-        classificacaos.sort((c1, c2) -> Integer.compare(c2.getAmbasMarcam(), c1.getAmbasMarcam()));
+        classificacaos.sort((c1, c2) -> Long.compare(c2.getAmbasMarcam(), c1.getAmbasMarcam()));
 //        mediaAmbas = mediaAmbas + mediaAmbas/4;
         sb.append("\n");
         sb.append("TIMES ACIMA DA MEDIA DE AMBAS MARCAM");
@@ -73,20 +73,20 @@ public class ClassificacaoService {
             for (Classificacao classificacao : classificacaos) {
                 if(jogo.getHome().getName().equals(classificacao.getTime()) || jogo.getAway().getName().equals(classificacao.getTime())){
                     if(jogo.getScoreFullTime().getAway() + jogo.getScoreFullTime().getHome() >= 3){
-                        classificacao.setQuantidadeOver25(1);
+                        classificacao.setQuantidadeOver25(1L);
                     }else{
-                        classificacao.setQuantidadeUnder25(1);
+                        classificacao.setQuantidadeUnder25(1L);
                     }
                     if(jogo.getScoreFullTime().getAway() >= 1 && jogo.getScoreFullTime().getHome() >= 1){
-                        classificacao.setAmbasMarcam(1);
+                        classificacao.setAmbasMarcam(1L);
                     }
 
                     if(jogo.getHome().getName().equals(classificacao.getTime())){
-                        classificacao.setGolsFeitos(jogo.getScoreFullTime().getHome());
-                        classificacao.setGolsLevados(jogo.getScoreFullTime().getAway());
+                        classificacao.setGolsFeitos(Long.valueOf(jogo.getScoreFullTime().getHome()));
+                        classificacao.setGolsLevados(Long.valueOf(jogo.getScoreFullTime().getAway()));
                     }else{
-                        classificacao.setGolsFeitos(jogo.getScoreFullTime().getAway());
-                        classificacao.setGolsLevados(jogo.getScoreFullTime().getHome());
+                        classificacao.setGolsFeitos(Long.valueOf(jogo.getScoreFullTime().getAway()));
+                        classificacao.setGolsLevados(Long.valueOf(jogo.getScoreFullTime().getHome()));
                     }
                 }
             }

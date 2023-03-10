@@ -8,9 +8,9 @@ create table verificar_entradas (
     flag_finalizado      BOOLEAN NOT NULL,
     flag_grem            BOOLEAN NOT NULL,
     padrao       varchar (100),
-    minuto1         INTEGER,
-    minuto2         INTEGER,
-    minuto3         INTEGER,
-    minuto4         INTEGER,
+    minuto1         BIGINT,
+    minuto2         BIGINT,
+    minuto3         BIGINT,
+    minuto4         BIGINT,
     primary key (id)
 )

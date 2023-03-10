@@ -14,12 +14,6 @@ public class VerificarEntradasService {
     @Autowired
     VerificarEntradasRepository entradasRepository;
 
-//    @Autowired
-//    public VerificarEntradasService(VerificarEntradasRepository entradasRepository){
-//        this.entradasRepository = entradasRepository;
-//    }
-
-
     public boolean verificarEntradaDuplicada(VerificarEntradas entrada) {
         VerificarEntradas e = entradasRepository.findByLigaAndHoraAndMinutosAndAposta(entrada.getLiga(), entrada.getHora(), entrada.getMinutos(), entrada.getAposta());
 
@@ -42,4 +36,7 @@ public class VerificarEntradasService {
     public void limparBanco() {
         entradasRepository.deleteAll();
     }
+
+
+
 }

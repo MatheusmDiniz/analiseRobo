@@ -1,6 +1,7 @@
 package com.roboAnalises.service;
 
 import com.roboAnalises.domain.AnalisePadroes;
+import com.roboAnalises.domain.Score;
 import com.roboAnalises.domain.enums.Apostas;
 import com.roboAnalises.domain.enums.Padrao;
 import com.roboAnalises.domain.enums.TipoEntrada;
@@ -11,9 +12,13 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.BiConsumer;
 
 @Service
 @AllArgsConstructor
@@ -45,7 +50,95 @@ public class RoboService {
         verificarPadrao(analisePadroes);
     }
 
-    public void verificarPadrao(List<AnalisePadroes> analisePadroes){
+    private Map<String, BiConsumer<Jogos, String>> createMapPadroesAposta() {
+        Map<String, BiConsumer<Jogos, String>> padroesAposta = new HashMap<>();
+        padroesAposta.put(Padrao.OVER25_0x0_INTERVALO_QUINA, (jogo, liga) -> verificarAposta(jogo, liga, 0, 0, Apostas.OVER25, TipoEntrada.QUINA, false));
+        padroesAposta.put(Padrao.OVER25_2x2_JOGOTODO_CIMA, (jogo, liga) -> verificarAposta(jogo, liga, 2, 2, Apostas.OVER25, TipoEntrada.CIMA_MAIS_UM, true));
+        padroesAposta.put(Padrao.OVER25_3x1_JOGOTODO_CIMA, (jogo, liga) -> verificarAposta(jogo, liga, 3, 1, Apostas.OVER25, TipoEntrada.CIMA_MAIS_UM, true));
+        padroesAposta.put(Padrao.OVER25_1x3_JOGOTODO_CIMA, (jogo, liga) -> verificarAposta(jogo, liga, 1, 3, Apostas.OVER25, TipoEntrada.CIMA_MAIS_UM, true));
+        padroesAposta.put(Padrao.AMBAS_1x1_INTERVALO_QUINA, (jogo, liga) -> verificarAposta(jogo, liga, 1, 1, Apostas.AMBASMARCAM, TipoEntrada.QUINA, false));
+        padroesAposta.put(Padrao.AMBAS_0x0_INTERVALO_QUINA, (jogo, liga) -> verificarAposta(jogo, liga, 0, 0, Apostas.AMBASMARCAM, TipoEntrada.QUINA, false));
+        padroesAposta.put(Padrao.AMBAS_2x0CASA_JOGOTODO_QUINA, (jogo, liga) -> verificarAposta(jogo, liga, 2, 0, Apostas.AMBASMARCAM, TipoEntrada.QUINA, true));
+        padroesAposta.put(Padrao.AMBAS_0x2FORA_JOGOTODO_QUINA, (jogo, liga) -> verificarAposta(jogo, liga, 0, 2, Apostas.AMBASMARCAM, TipoEntrada.QUINA, true));
+        padroesAposta.put(Padrao.AMBAS_0x0_JOGOTODO_QUINA, (jogo, liga) -> verificarAposta(jogo, liga, 0, 0, Apostas.AMBASMARCAM, TipoEntrada.QUINA, true));
+        padroesAposta.put(Padrao.AMBAS_3x1_JOGOTODO_CIMA, (jogo, liga) -> verificarAposta(jogo, liga, 3, 1, Apostas.AMBASMARCAM, TipoEntrada.CIMA_MAIS_UM, true));
+        padroesAposta.put(Padrao.AMBAS_2x2_JOGOTODO_CIMA, (jogo, liga) -> verificarAposta(jogo, liga, 2, 2, Apostas.AMBASMARCAM, TipoEntrada.CIMA_MAIS_UM, true));
+        padroesAposta.put(Padrao.AMBAS_1x3_JOGOTODO_CIMA, (jogo, liga) -> verificarAposta(jogo, liga, 1, 3, Apostas.AMBASMARCAM, TipoEntrada.CIMA_MAIS_UM, true));
+        padroesAposta.put(Padrao.OVER25_2x0_JOGOTODO_QUINTO, (jogo, liga) -> verificarAposta(jogo, liga, 2, 0, Apostas.OVER25, TipoEntrada.QUINTO_JOGO, true));
+        padroesAposta.put(Padrao.Over25_0x2_JOGOTODO_QUINTO, (jogo, liga) -> verificarAposta(jogo, liga, 0, 2, Apostas.OVER25, TipoEntrada.QUINTO_JOGO, true));
+        padroesAposta.put(Padrao.Over25_1x2_JOGOTODO_QUINTO, (jogo, liga) -> verificarAposta(jogo, liga, 1, 2, Apostas.OVER25, TipoEntrada.QUINTO_JOGO, true));
+        padroesAposta.put(Padrao.Over25_2x3_JOGOTODO_QUINTO, (jogo, liga) -> verificarAposta(jogo, liga, 2, 3, Apostas.OVER25, TipoEntrada.QUINTO_JOGO, true));
+        padroesAposta.put(Padrao.AMBAS_2x0_JOGOTODO_QUINTO, (jogo, liga) -> verificarAposta(jogo, liga, 2, 0, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO, true));
+        padroesAposta.put(Padrao.AMBAS_3x0_JOGOTODO_QUINTO, (jogo, liga) -> verificarAposta(jogo, liga, 3, 0, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO, true));
+        padroesAposta.put(Padrao.AMBAS_0x2_JOGOTODO_QUINTO, (jogo, liga) -> verificarAposta(jogo, liga, 0, 2, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO, true));
+        padroesAposta.put(Padrao.AMBAS_0x1_JOGOTODO_QUINTO, (jogo, liga) -> verificarAposta(jogo, liga, 0, 1, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO, true));
+        padroesAposta.put(Padrao.AMBAS_1x2_JOGOTODO_QUINTO, (jogo, liga) -> verificarAposta(jogo, liga, 1, 2, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO, true));
+        padroesAposta.put(Padrao.AMBAS_1x3_JOGOTODO_QUINTO, (jogo, liga) -> verificarAposta(jogo, liga, 1, 3, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO, true));
+        padroesAposta.put(Padrao.AMBAS_2x3_JOGOTODO_QUINTO, (jogo, liga) -> verificarAposta(jogo, liga, 2, 3, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO, true));
+        padroesAposta.put(Padrao.AMBAS_1x0_INTERVALO_QUINA, (jogo, liga) -> verificarAposta(jogo, liga, 1, 0, Apostas.AMBASMARCAM, TipoEntrada.QUINA, false));
+        padroesAposta.put(Padrao.AMBAS_2x0_INTERVALO_QUINA, (jogo, liga) -> verificarAposta(jogo, liga, 2, 0, Apostas.AMBASMARCAM, TipoEntrada.QUINA, false));
+        padroesAposta.put(Padrao.AMBAS_1x2_JOGOTODO_QUINA, (jogo, liga) -> verificarAposta(jogo, liga, 1, 2, Apostas.AMBASMARCAM, TipoEntrada.QUINA, true));
+        padroesAposta.put(Padrao.AMBAS_2x2_JOGOTODO_QUINA, (jogo, liga) -> verificarAposta(jogo, liga, 2, 2, Apostas.AMBASMARCAM, TipoEntrada.QUINA, true));
+        padroesAposta.put(Padrao.AMBAS_2x1_JOGOTODO_QUINA, (jogo, liga) -> verificarAposta(jogo, liga, 2, 1, Apostas.AMBASMARCAM, TipoEntrada.QUINA, true));
+        padroesAposta.put(Padrao.AMBAS_0x2_INTERVALO_CIMA, (jogo, liga) -> verificarAposta(jogo, liga, 0, 2, Apostas.AMBASMARCAM, TipoEntrada.CIMA_MAIS_UM, false));
+        padroesAposta.put(Padrao.AMBAS_1x2_JOGOTODO_CIMA, (jogo, liga) -> verificarAposta(jogo, liga, 1, 2, Apostas.AMBASMARCAM, TipoEntrada.CIMA_MAIS_UM, true));
+        padroesAposta.put(Padrao.AMBAS_3x0_JOGOTODO_CIMA, (jogo, liga) -> verificarAposta(jogo, liga, 3, 0, Apostas.AMBASMARCAM, TipoEntrada.CIMA_MAIS_UM, true));
+        padroesAposta.put(Padrao.AMBAS_0x1_INTERVALO_QUINTO, (jogo, liga) -> verificarAposta(jogo, liga, 0, 1, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO, false));
+        padroesAposta.put(Padrao.AMBAS_0x2_INTERVALO_QUINTO, (jogo, liga) -> verificarAposta(jogo, liga, 0, 2, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO, false));
+        padroesAposta.put(Padrao.AMBAS_3x1_JOGOTODO_QUINTO, (jogo, liga) -> verificarAposta(jogo, liga, 3, 1, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO, true));
+        padroesAposta.put(Padrao.AMBAS_2x0_INTERVALO_QUINTO_HORA_ANTERIOR, (jogo, liga) -> verificarAposta(jogo, liga, 2, 0, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO_HORA_ANTERIOR, false));
+        padroesAposta.put(Padrao.AMBAS_0x0_JOGOTODO_QUINTO_HORA_ANTERIOR, (jogo, liga) -> verificarAposta(jogo, liga, 0, 0, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO_HORA_ANTERIOR, true));
+        padroesAposta.put(Padrao.AMBAS_0x2_JOGOTODO_QUINTO_HORA_ANTERIOR, (jogo, liga) -> verificarAposta(jogo, liga, 0, 2, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO_HORA_ANTERIOR, true));
+        padroesAposta.put(Padrao.AMBAS_3x1_JOGOTODO_QUINTO_HORA_ANTERIOR, (jogo, liga) -> verificarAposta(jogo, liga, 3, 1, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO_HORA_ANTERIOR, true));
+        padroesAposta.put(Padrao.OVER25_2x1_JOGOTODO_QUINA, (jogo, liga) -> verificarAposta(jogo, liga, 2, 1, Apostas.OVER25, TipoEntrada.QUINA, true));
+        padroesAposta.put(Padrao.OVER25_2x2_JOGOTODO_QUINA, (jogo, liga) -> verificarAposta(jogo, liga, 2, 2, Apostas.OVER25, TipoEntrada.QUINA, true));
+        padroesAposta.put(Padrao.OVER25_1x1_INTERVALO_QUINA, (jogo, liga) -> verificarAposta(jogo, liga, 1, 1, Apostas.OVER25, TipoEntrada.QUINA, false));
+        padroesAposta.put(Padrao.OVER25_0x2_INTERVALO_CIMA, (jogo, liga) -> verificarAposta(jogo, liga, 0, 2, Apostas.OVER25, TipoEntrada.CIMA_MAIS_UM, false));
+        padroesAposta.put(Padrao.OVER25_2x1_JOGOTODO_CIMA, (jogo, liga) -> verificarAposta(jogo, liga, 2, 1, Apostas.OVER25, TipoEntrada.CIMA_MAIS_UM, true));
+        padroesAposta.put(Padrao.OVER25_0x3_JOGOTODO_CIMA, (jogo, liga) -> verificarAposta(jogo, liga, 0, 3, Apostas.OVER25, TipoEntrada.CIMA_MAIS_UM, true));
+        padroesAposta.put(Padrao.Over25_0x3_JOGOTODO_QUINTO, (jogo, liga) -> verificarAposta(jogo, liga, 0, 3, Apostas.OVER25, TipoEntrada.QUINTO_JOGO, true));
+        padroesAposta.put(Padrao.Over25_2x2_JOGOTODO_QUINTO, (jogo, liga) -> verificarAposta(jogo, liga, 2, 2, Apostas.OVER25, TipoEntrada.QUINTO_JOGO, true));
+        padroesAposta.put(Padrao.Over25_3x1_JOGOTODO_QUINTO, (jogo, liga) -> verificarAposta(jogo, liga, 3, 1, Apostas.OVER25, TipoEntrada.QUINTO_JOGO, true));
+
+        padroesAposta.put(Padrao.OVER25_0x0INTERVALO_0x1JOGOTODO_QUINA, (jogo, liga) -> verificarApostaIntervaloEFullTime(jogo, liga, 0, 0, 0, 1, Apostas.OVER25, TipoEntrada.QUINA));
+        padroesAposta.put(Padrao.OVER25_0x0INTERVALO_1x0JOGOTODO_QUINA, (jogo, liga) -> verificarApostaIntervaloEFullTime(jogo, liga, 0, 1, 0, 0, Apostas.OVER25, TipoEntrada.QUINA));
+        padroesAposta.put(Padrao.OVER25_0x0INTERVALO_2x0JOGOTODO_QUINA, (jogo, liga) -> verificarApostaIntervaloEFullTime(jogo, liga, 0, 2, 0, 0, Apostas.OVER25, TipoEntrada.QUINA));
+        padroesAposta.put(Padrao.OVER25_0x1INTERVALO_0x1JOGOTODO_QUINA, (jogo, liga) -> verificarApostaIntervaloEFullTime(jogo, liga, 0, 1, 0, 1, Apostas.OVER25, TipoEntrada.QUINA));
+        padroesAposta.put(Padrao.OVER25_0x1INTERVALO_0x2JOGOTODO_QUINA, (jogo, liga) -> verificarApostaIntervaloEFullTime(jogo, liga, 0, 1, 0, 2, Apostas.OVER25, TipoEntrada.QUINA));
+        padroesAposta.put(Padrao.OVER25_1x0INTERVALO_2x0JOGOTODO_QUINA, (jogo, liga) -> verificarApostaIntervaloEFullTime(jogo, liga, 1, 0, 2, 0, Apostas.OVER25, TipoEntrada.QUINA));
+        padroesAposta.put(Padrao.OVER25_1x1INTERVALO_1x1JOGOTODO_QUINA, (jogo, liga) -> verificarApostaIntervaloEFullTime(jogo, liga, 1, 1, 1, 1, Apostas.OVER25, TipoEntrada.QUINA));
+        padroesAposta.put(Padrao.OVER25_0x0INTERVALO_1x0JOGOTODO_QUINTO, (jogo, liga) -> verificarApostaIntervaloEFullTime(jogo, liga, 0, 0, 1, 0, Apostas.OVER25, TipoEntrada.QUINA));
+        padroesAposta.put(Padrao.OVER25_0x2INTERVALO_0x2JOGOTODO_QUINTO, (jogo, liga) -> verificarApostaIntervaloEFullTime(jogo, liga, 0, 2, 0, 2, Apostas.OVER25, TipoEntrada.QUINA));
+        padroesAposta.put(Padrao.OVER25_1x0INTERVALO_1x1JOGOTODO_QUINTO, (jogo, liga) -> verificarApostaIntervaloEFullTime(jogo, liga, 1, 0, 1, 1, Apostas.OVER25, TipoEntrada.QUINA));
+        padroesAposta.put(Padrao.OVER25_1x0INTERVALO_2x0JOGOTODO_QUINTO, (jogo, liga) -> verificarApostaIntervaloEFullTime(jogo, liga, 1, 0, 2, 0, Apostas.OVER25, TipoEntrada.QUINA));
+        padroesAposta.put(Padrao.AMBAS_0x0INTERVALO_0x1JOGOTODO_QUINA, (jogo, liga) -> verificarApostaIntervaloEFullTime(jogo, liga, 0, 0, 0, 1, Apostas.AMBASMARCAM, TipoEntrada.QUINA));
+        padroesAposta.put(Padrao.AMBAS_0x1INTERVALO_1x2JOGOTODO_QUINA, (jogo, liga) -> verificarApostaIntervaloEFullTime(jogo, liga, 0, 1, 1, 2, Apostas.AMBASMARCAM, TipoEntrada.QUINA));
+        padroesAposta.put(Padrao.AMBAS_1x1INTERVALO_1x1JOGOTODO_QUINA, (jogo, liga) -> verificarApostaIntervaloEFullTime(jogo, liga, 1, 1, 1, 1, Apostas.AMBASMARCAM, TipoEntrada.QUINA));
+        padroesAposta.put(Padrao.AMBAS_1x1INTERVALO_1x1JOGOTODO_CIMA, (jogo, liga) -> verificarApostaIntervaloEFullTime(jogo, liga, 1, 1, 1, 1, Apostas.AMBASMARCAM, TipoEntrada.CIMA_MAIS_UM));
+        padroesAposta.put(Padrao.AMBAS_0x0INTERVALO_0x1JOGOTODO_CIMA, (jogo, liga) -> verificarApostaIntervaloEFullTime(jogo, liga, 0, 0, 0, 1, Apostas.AMBASMARCAM, TipoEntrada.CIMA_MAIS_UM));
+        padroesAposta.put(Padrao.AMBAS_0x1INTERVALO_0x1JOGOTODO_CIMA, (jogo, liga) -> verificarApostaIntervaloEFullTime(jogo, liga, 0, 1, 0, 1, Apostas.AMBASMARCAM, TipoEntrada.CIMA_MAIS_UM));
+        padroesAposta.put(Padrao.AMBAS_0x1INTERVALO_0x2JOGOTODO_CIMA, (jogo, liga) -> verificarApostaIntervaloEFullTime(jogo, liga, 0, 1, 0, 2, Apostas.AMBASMARCAM, TipoEntrada.CIMA_MAIS_UM));
+        padroesAposta.put(Padrao.AMBAS_0x1INTERVALO_1x2JOGOTODO_CIMA, (jogo, liga) -> verificarApostaIntervaloEFullTime(jogo, liga, 0, 1, 1, 2, Apostas.AMBASMARCAM, TipoEntrada.CIMA_MAIS_UM));
+        padroesAposta.put(Padrao.AMBAS_0x0INTERVALO_1x1JOGOTODO_QUINTO, (jogo, liga) -> verificarApostaIntervaloEFullTime(jogo, liga, 0, 0, 1, 1, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO));
+        padroesAposta.put(Padrao.AMBAS_1x0INTERVALO_2x0JOGOTODO_QUINTO, (jogo, liga) -> verificarApostaIntervaloEFullTime(jogo, liga, 1, 0, 2, 0, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO));
+        padroesAposta.put(Padrao.AMBAS_0x1INTERVALO_0x2JOGOTODO_QUINTO, (jogo, liga) -> verificarApostaIntervaloEFullTime(jogo, liga, 0, 1, 0, 2, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO));
+        padroesAposta.put(Padrao.AMBAS_0x0INTERVALO_1x1JOGOTODO_QUINTO_HORA_ANTERIOR, (jogo, liga) -> verificarApostaIntervaloEFullTime(jogo, liga, 0, 0, 1, 1, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO_HORA_ANTERIOR));
+        padroesAposta.put(Padrao.AMBAS_0x1INTERVALO_0x2JOGOTODO_QUINTO_HORA_ANTERIOR, (jogo, liga) -> verificarApostaIntervaloEFullTime(jogo, liga, 0, 1, 0, 2, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO_HORA_ANTERIOR));
+        padroesAposta.put(Padrao.AMBAS_0x1INTERVALO_1x1JOGOTODO_QUINTO_HORA_ANTERIOR, (jogo, liga) -> verificarApostaIntervaloEFullTime(jogo, liga, 0, 1, 1, 1, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO_HORA_ANTERIOR));
+        padroesAposta.put(Padrao.AMBAS_2x0INTERVALO_2x0JOGOTODO_QUINTO_HORA_ANTERIOR, (jogo, liga) -> verificarApostaIntervaloEFullTime(jogo, liga, 2, 0, 2, 0, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO_HORA_ANTERIOR));
+        padroesAposta.put(Padrao.OVER25_0x0INTERVALO_0x1JOGOTODO_CIMA, (jogo, liga) -> verificarApostaIntervaloEFullTime(jogo, liga, 0, 0, 0, 1, Apostas.OVER25, TipoEntrada.CIMA_MAIS_UM));
+        padroesAposta.put(Padrao.OVER25_1x0INTERVALO_1x1JOGOTODO_CIMA, (jogo, liga) -> verificarApostaIntervaloEFullTime(jogo, liga, 1, 0, 1, 1, Apostas.OVER25, TipoEntrada.CIMA_MAIS_UM));
+        padroesAposta.put(Padrao.OVER25_1x1INTERVALO_1x1JOGOTODO_CIMA, (jogo, liga) -> verificarApostaIntervaloEFullTime(jogo, liga, 1, 1, 1, 1, Apostas.OVER25, TipoEntrada.CIMA_MAIS_UM));
+        padroesAposta.put(Padrao.OVER25_0x1INTERVALO_0x1JOGOTODO_QUINTO, (jogo, liga) -> verificarApostaIntervaloEFullTime(jogo, liga, 0, 1, 0, 1, Apostas.OVER25, TipoEntrada.QUINTO_JOGO));
+        padroesAposta.put(Padrao.OVER25_1x1INTERVALO_1x1JOGOTODO_QUINTO, (jogo, liga) -> verificarApostaIntervaloEFullTime(jogo, liga, 1, 1, 1, 1, Apostas.OVER25, TipoEntrada.QUINTO_JOGO));
+        padroesAposta.put(Padrao.OVER25_0x1INTERVALO_1x1JOGOTODO_QUINTO_HORA_ANTERIOR, (jogo, liga) -> verificarApostaIntervaloEFullTime(jogo, liga, 0, 1, 1, 1, Apostas.OVER25, TipoEntrada.QUINTO_JOGO_HORA_ANTERIOR));
+
+
+        return padroesAposta;
+    }
+
+        public void verificarPadrao(List<AnalisePadroes> analisePadroes){
+
         List<Jogos> ultimosjogos = new ApiVsStatsService().getUltimosJogosTodasLigas();
 
         if(ultimosjogos.isEmpty()){
@@ -53,339 +146,63 @@ public class RoboService {
         }
 
         ultimosjogos.removeIf(j -> {
-            int hora = LocalTime.of(Data.getHoraAtualLondon(), 0, 0).minusHours(1).getHour();
-            return j.getHour() != hora ;
+            return Data.verificarDiaHoraJogoComLondresCasoDiferenteRetornaTrue(j.getIdString());
         });
 
         Collections.shuffle(ultimosjogos);
 
+        Map<String, BiConsumer<Jogos, String>> padroesAposta = createMapPadroesAposta();
 
-        for(int i = ultimosjogos.size()-1; i >= 0; i--){
-            try{
-                if (ultimosjogos.get(i).getMinute() > Data.getMinutoAtualLondon()+4 && ultimosjogos.get(i).getMinute() < Data.getMinutoAtualLondon() + 8) {
+            for (int i = ultimosjogos.size() - 1; i >= 0; i--) {
+                try {
+                    Jogos jogo = ultimosjogos.get(i);
                     for (AnalisePadroes analise : analisePadroes) {
-//                        Long entradasNaoFinalizadas = entradasService.findEntradasNaoFinalizadas();
-//                        if(entradasNaoFinalizadas >= 1){
-//                            return;
-//                        }
+                        if(Util.isPadraoQuinto(analise)){
+                            if (Data.verificarTempoDoPadraoQuintaEntrada(jogo.getIdString())) {
+                                String padrao = analise.getPadrao();
+                                String liga = analise.getLiga();
+                                BiConsumer<Jogos, String> biConsumer = padroesAposta.get(padrao);
+                                if (biConsumer != null) {
+                                    biConsumer.accept(jogo, liga);
+                                }
+                            }
+                        }else{
+                            if (jogo.getMinute() > Data.getMinutoAtualLondon() + 4 && jogo.getMinute() < Data.getMinutoAtualLondon() + 8) {
+                                String padrao = analise.getPadrao();
+                                String liga = analise.getLiga();
+                                BiConsumer<Jogos, String> biConsumer = padroesAposta.get(padrao);
+                                if (biConsumer != null) {
+                                    biConsumer.accept(jogo, liga);
+                                }
+                                if(analise.getPadrao().equals(Padrao.OVER25_RESULTADOSIGUAIS_JOGOTODO_QUINA)){
+                                    if(ultimosjogos.get(i).getLiga().equals(ultimosjogos.get(i+1).getLiga())){
+                                        verificarOver25ResultadosIguais(ultimosjogos.get(i), ultimosjogos.get(i+1), analise.getLiga());
+                                    }
+                                }
 
-                        if(analise.getPadrao().equals(Padrao.OVER25_RESULTADOSIGUAIS_JOGOTODO_QUINA)){
-                            if(ultimosjogos.get(i).getLiga().equals(ultimosjogos.get(i+1).getLiga())){
-                                verificarOver25ResultadosIguais(ultimosjogos.get(i), ultimosjogos.get(i+1), analise.getLiga());
                             }
                         }
-
-                        if(analise.getPadrao().equals(Padrao.OVER25_0x0_INTERVALO_QUINA)){
-                            verificarOver250x0Intervalo(ultimosjogos.get(i), analise.getLiga());
-                        }
-
-                        if(analise.getPadrao().equals(Padrao.OVER25_2x2_JOGOTODO_CIMA)){
-                            verificarOver252x2(ultimosjogos.get(i), analise.getLiga());
-                        }
-
-                        if(analise.getPadrao().equals(Padrao.OVER25_3x1_JOGOTODO_CIMA)){
-                            verificarOver253x1Casa(ultimosjogos.get(i), analise.getLiga());
-                        }
-
-                        if(analise.getPadrao().equals(Padrao.OVER25_1x3_JOGOTODO_CIMA)){
-                            verificarOver251x3Fora(ultimosjogos.get(i), analise.getLiga());
-                        }
-
-                        if(analise.getPadrao().equals(Padrao.OVER25_0x0INTERVALO_0x1JOGOTODO_QUINA)){
-                            verificarOver250x0Intervalo0x1JogoTodoQuina(ultimosjogos.get(i), analise.getLiga());
-                        }
-
-                        if(analise.getPadrao().equals(Padrao.OVER25_0x0INTERVALO_1x0JOGOTODO_QUINA)){
-                            verificarOver250x0Intervalo1x0JogoTodoQuina(ultimosjogos.get(i), analise.getLiga());
-                        }
-                        if(analise.getPadrao().equals(Padrao.OVER25_0x0INTERVALO_2x0JOGOTODO_QUINA)){
-                            verificarOver250x0Intervalo2x0JogoTodoQuina(ultimosjogos.get(i), analise.getLiga());
-                        }
-
-                        if(analise.getPadrao().equals(Padrao.OVER25_0x1INTERVALO_0x1JOGOTODO_QUINA)){
-                            verificarOver250x1Intervalo0x1JogoTodoQuina(ultimosjogos.get(i), analise.getLiga());
-                        }
-
-                        if(analise.getPadrao().equals(Padrao.OVER25_0x1INTERVALO_0x2JOGOTODO_QUINA)){
-                            verificarOver250x1Intervalo0x2JogoTodoQuina(ultimosjogos.get(i), analise.getLiga());
-                        }
-
-                        if(analise.getPadrao().equals(Padrao.OVER25_1x0INTERVALO_2x0JOGOTODO_QUINA)){
-                            verificarOver251x0Intervalo2x0JogoTodoQuina(ultimosjogos.get(i), analise.getLiga());
-                        }
-
-                        if(analise.getPadrao().equals(Padrao.OVER25_1x1INTERVALO_1x1JOGOTODO_QUINA)){
-                            verificarOver251x1Intervalo1x1JogoTodoQuina(ultimosjogos.get(i), analise.getLiga());
-                        }
-
-                        if(analise.getPadrao().equals(Padrao.AMBAS_1x1_INTERVALO_QUINA)){
-                            verificarAmbasMarcam1x1Intervalo(ultimosjogos.get(i), analise.getLiga());
-                        }
-
-                        if(analise.getPadrao().equals(Padrao.AMBAS_0x0_INTERVALO_QUINA)){
-                            verificarAmbasMarcam0x0Intervalo(ultimosjogos.get(i), analise.getLiga());
-                        }
-
-                        if(analise.getPadrao().equals(Padrao.AMBAS_2x0CASA_JOGOTODO_QUINA)){
-                            verificarAmbasMarcam2x0Casa(ultimosjogos.get(i), analise.getLiga());
-                        }
-
-                        if(analise.getPadrao().equals(Padrao.AMBAS_0x2FORA_JOGOTODO_QUINA)){
-                            verificarAmbasMarcam0x2Visitante(ultimosjogos.get(i), analise.getLiga());
-                        }
-
-                        if(analise.getPadrao().equals(Padrao.AMBAS_0x0_JOGOTODO_QUINA)){
-                            verificarAmbasMarcam0x0(ultimosjogos.get(i), analise.getLiga());
-                        }
-
-                        if(analise.getPadrao().equals(Padrao.AMBAS_3x1_JOGOTODO_CIMA)){
-                            verificarAmbas3x1Casa(ultimosjogos.get(i), analise.getLiga());
-                        }
-
-                        if(analise.getPadrao().equals(Padrao.AMBAS_2x2_JOGOTODO_CIMA)){
-                            verificarAmbas2x2(ultimosjogos.get(i), analise.getLiga());
-                        }
-
-                        if(analise.getPadrao().equals(Padrao.AMBAS_1x3_JOGOTODO_CIMA)){
-                            verificarAmbas1x3Fora(ultimosjogos.get(i), analise.getLiga());
-                        }
-
-                        if(analise.getPadrao().equals(Padrao.OVER25_2x0_JOGOTODO_QUINTO)){
-                            verificarOver252x0CasaQuinto(ultimosjogos.get(i), analise.getLiga());
-                        }
-
-
-
-
-
                     }
-                }
-
-            }catch (Exception e){
-                continue;
-            }
-        }
-    }
-
-    private void verificarOver252x0CasaQuinto(Jogos jogo, String liga) {
-        if (jogo.getLiga().equals(liga)) {
-            if(jogo.getScoreFullTime().getHome() == 2) {
-                if (jogo.getScoreFullTime().getAway() == 0) {
-                    telegramService.montarMensagem(jogo, Apostas.OVER25, TipoEntrada.QUINTO_JOGO);
+                } catch (Exception e) {
+                    continue;
                 }
             }
         }
-    }
 
-    private void verificarAmbas1x3Fora(Jogos jogo, String liga) {
-        if (jogo.getLiga().equals(liga)) {
-            if(jogo.getScoreFullTime().getHome() == 1) {
-                if (jogo.getScoreFullTime().getAway() == 3) {
-                    telegramService.montarMensagem(jogo, Apostas.AMBASMARCAM, TipoEntrada.CIMA_MAIS_UM);
-                }
-            }
+    private void verificarAposta(Jogos jogo, String liga, int homeScore, int awayScore, String aposta, String tipoEntrada, boolean isFullTime) {
+        Score score = isFullTime ? jogo.getScoreFullTime() : jogo.getScoreHalfTime();
+        if (jogo.getLiga().equals(liga) && score.getHome() == homeScore && score.getAway() == awayScore) {
+            telegramService.montarMensagem(jogo, aposta, tipoEntrada);
         }
     }
 
-    private void verificarAmbas2x2(Jogos jogo, String liga) {
-        if (jogo.getLiga().equals(liga)) {
-            if(jogo.getScoreFullTime().getHome() == 2) {
-                if (jogo.getScoreFullTime().getAway() == 2) {
-                    telegramService.montarMensagem(jogo, Apostas.AMBASMARCAM, TipoEntrada.CIMA_MAIS_UM);
-                }
-            }
-        }
-    }
-
-    private void verificarAmbas3x1Casa(Jogos jogo, String liga) {
-        if (jogo.getLiga().equals(liga)) {
-            if(jogo.getScoreFullTime().getHome() == 3) {
-                if (jogo.getScoreFullTime().getAway() == 1) {
-                    telegramService.montarMensagem(jogo, Apostas.AMBASMARCAM, TipoEntrada.CIMA_MAIS_UM);
-                }
-            }
-        }
-    }
-
-    private void verificarAmbasMarcam0x0(Jogos jogo, String liga) {
-        if (jogo.getLiga().equals(liga)) {
-            if(jogo.getScoreFullTime().getHome() == 0){
-                if(jogo.getScoreFullTime().getAway() == 0){
-                    telegramService.montarMensagem(jogo, Apostas.AMBASMARCAM, TipoEntrada.QUINA);
-                }
-            }
-        }
-    }
-
-    private void verificarAmbasMarcam0x2Visitante(Jogos jogo, String liga) {
-        if (jogo.getLiga().equals(liga)) {
-            if(jogo.getScoreFullTime().getHome() == 0){
-                if(jogo.getScoreFullTime().getAway() == 2){
-                    telegramService.montarMensagem(jogo, Apostas.AMBASMARCAM, TipoEntrada.QUINA);
-                }
-            }
-        }
-    }
-
-    private void verificarAmbasMarcam2x0Casa(Jogos jogo, String liga) {
-        if (jogo.getLiga().equals(liga)) {
-            if(jogo.getScoreFullTime().getHome() == 2){
-                if(jogo.getScoreFullTime().getAway() == 0){
-                    telegramService.montarMensagem(jogo, Apostas.AMBASMARCAM, TipoEntrada.QUINA);
-                }
-            }
-        }
-    }
-
-    private void verificarAmbasMarcam0x0Intervalo(Jogos jogos, String liga) {
-        if (jogos.getLiga().equals(liga)) {
-            if(jogos.getScoreHalfTime().getHome() == 0) {
-                if (jogos.getScoreHalfTime().getAway() == 0) {
-                    telegramService.montarMensagem(jogos, Apostas.AMBASMARCAM, TipoEntrada.QUINA);
-                }
-            }
-        }
-    }
-
-    private void verificarAmbasMarcam1x1Intervalo(Jogos jogos, String liga) {
-        if (jogos.getLiga().equals(liga)) {
-            if(jogos.getScoreHalfTime().getHome() == 1) {
-                if (jogos.getScoreHalfTime().getAway() == 1) {
-                    telegramService.montarMensagem(jogos, Apostas.AMBASMARCAM, TipoEntrada.QUINA);
-                }
-            }
-        }
-    }
-
-    private void verificarOver251x1Intervalo1x1JogoTodoQuina(Jogos jogos, String liga) {
-        if (jogos.getLiga().equals(liga)) {
-            if(jogos.getScoreHalfTime().getHome() == 1){
-                if(jogos.getScoreHalfTime().getAway() == 1){
-                    if(jogos.getScoreFullTime().getHome() == 1) {
-                        if (jogos.getScoreFullTime().getAway() == 1) {
-                            telegramService.montarMensagem(jogos, Apostas.OVER25, TipoEntrada.QUINA);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private void verificarOver251x0Intervalo2x0JogoTodoQuina(Jogos jogos, String liga) {
-        if (jogos.getLiga().equals(liga)) {
-            if(jogos.getScoreHalfTime().getHome() == 1){
-                if(jogos.getScoreHalfTime().getAway() == 0){
-                    if(jogos.getScoreFullTime().getHome() == 2) {
-                        if (jogos.getScoreFullTime().getAway() == 0) {
-                            telegramService.montarMensagem(jogos, Apostas.OVER25, TipoEntrada.QUINA);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private void verificarOver250x1Intervalo0x2JogoTodoQuina(Jogos jogos, String liga) {
-        if (jogos.getLiga().equals(liga)) {
-            if(jogos.getScoreHalfTime().getHome() == 0){
-                if(jogos.getScoreHalfTime().getAway() == 1){
-                    if(jogos.getScoreFullTime().getHome() == 0) {
-                        if (jogos.getScoreFullTime().getAway() == 2) {
-                            telegramService.montarMensagem(jogos, Apostas.OVER25, TipoEntrada.QUINA);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private void verificarOver250x1Intervalo0x1JogoTodoQuina(Jogos jogos, String liga) {
-        if (jogos.getLiga().equals(liga)) {
-            if(jogos.getScoreHalfTime().getHome() == 0){
-                if(jogos.getScoreHalfTime().getAway() == 1){
-                    if(jogos.getScoreFullTime().getHome() == 0) {
-                        if (jogos.getScoreFullTime().getAway() == 1) {
-                            telegramService.montarMensagem(jogos, Apostas.OVER25, TipoEntrada.QUINA);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private void verificarOver250x0Intervalo2x0JogoTodoQuina(Jogos jogos, String liga) {
-    if(jogos.getLiga().equals(liga)){
-        if(jogos.getScoreHalfTime().getHome() == 0){
-            if(jogos.getScoreHalfTime().getAway() == 0){
-                if(jogos.getScoreFullTime().getHome() == 2) {
-                    if (jogos.getScoreFullTime().getAway() == 0) {
-                        telegramService.montarMensagem(jogos, Apostas.OVER25, TipoEntrada.QUINA);
-                    }
-                }}}
-    }
-}
-    private void verificarOver250x0Intervalo1x0JogoTodoQuina(Jogos jogos, String liga) {
-        if(jogos.getLiga().equals(liga)){
-            if(jogos.getScoreHalfTime().getHome() == 0){
-                if(jogos.getScoreHalfTime().getAway() == 0){
-                    if(jogos.getScoreFullTime().getHome() == 1) {
-                        if (jogos.getScoreFullTime().getAway() == 0) {
-                    telegramService.montarMensagem(jogos, Apostas.OVER25, TipoEntrada.QUINA);
-                }
-            }}}
-        }
-    }
-
-    private void verificarOver250x0Intervalo0x1JogoTodoQuina(Jogos jogos, String liga) {
-        if(jogos.getLiga().equals(liga)){
-            if(jogos.getScoreHalfTime().getHome() == 0){
-                if(jogos.getScoreHalfTime().getAway() == 0){
-                    if(jogos.getScoreFullTime().getHome() == 0) {
-                        if (jogos.getScoreFullTime().getAway() == 1) {
-                            telegramService.montarMensagem(jogos, Apostas.OVER25, TipoEntrada.QUINA);
-                }
-            }
-        }
-    }
-        }}
-
-    private void verificarOver251x3Fora(Jogos jogos, String liga) {
-        if(jogos.getLiga().equals(liga)){
-            if(jogos.getScoreFullTime().getHome() == 1) {
-                if (jogos.getScoreFullTime().getAway() == 3) {
-                    telegramService.montarMensagem(jogos, Apostas.OVER25, TipoEntrada.CIMA_MAIS_UM);
-                }
-            }
-        }
-    }
-
-    private void verificarOver253x1Casa(Jogos jogos, String liga) {
-        if(jogos.getLiga().equals(liga)){
-            if(jogos.getScoreFullTime().getHome() == 3) {
-                if (jogos.getScoreFullTime().getAway() == 1) {
-                    telegramService.montarMensagem(jogos, Apostas.OVER25, TipoEntrada.CIMA_MAIS_UM);
-                }
-            }
-        }
-    }
-
-    private void verificarOver252x2(Jogos jogos, String liga) {
-        if(jogos.getLiga().equals(liga)){
-            if(jogos.getScoreFullTime().getHome() == 2) {
-                if (jogos.getScoreFullTime().getAway() == 2) {
-                    telegramService.montarMensagem(jogos, Apostas.OVER25, TipoEntrada.CIMA_MAIS_UM);
-                }
-            }
-        }
-    }
-
-    private void verificarOver250x0Intervalo(Jogos jogo, String ligaAnalise) {
-        if(jogo.getLiga().equals(ligaAnalise)){
-            if(jogo.getScoreHalfTime().getHome() == 0) {
-                if (jogo.getScoreHalfTime().getAway() == 0) {
-                    telegramService.montarMensagem(jogo, Apostas.OVER25, TipoEntrada.QUINA);
-                }
-            }
+    private void verificarApostaIntervaloEFullTime(Jogos jogos, String liga, int homeScoreHalf, int awayScoreHalf, int homeScoreFull, int awayScoreFull, String aposta, String tipoEntrada) {
+        if (jogos.getLiga().equals(liga) &&
+                jogos.getScoreHalfTime().getHome() == homeScoreHalf &&
+                jogos.getScoreHalfTime().getAway() == awayScoreHalf &&
+                jogos.getScoreFullTime().getHome() == homeScoreFull &&
+                jogos.getScoreFullTime().getAway() == awayScoreFull) {
+            telegramService.montarMensagem(jogos, aposta, tipoEntrada);
         }
     }
 

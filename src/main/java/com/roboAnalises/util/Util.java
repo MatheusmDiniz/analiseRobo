@@ -2,6 +2,7 @@ package com.roboAnalises.util;
 
 
 
+import com.roboAnalises.domain.AnalisePadroes;
 import com.roboAnalises.domain.Estatisticas;
 
 import java.io.BufferedReader;
@@ -16,7 +17,7 @@ public class Util {
         return jsonEmString;
     }
 
-    public static Boolean isEntradaQuebrada(Integer jogo1, Integer jogo4){
+    public static Boolean isEntradaQuebrada(Long jogo1, Long jogo4){
         if(jogo4 - jogo1 < 0){
             return true;
         }else {
@@ -24,8 +25,8 @@ public class Util {
         }
     }
 
-    public static Boolean isMinutoHoraAtualEntrada(Integer minuto){
-        Integer[] ultimosMinutosHora = {51, 52, 53, 54, 55, 56, 57, 58, 59};
+    public static Boolean isMinutoHoraAtualEntrada(Long minuto){
+        Long[] ultimosMinutosHora = {51L, 52L, 53L, 54L, 55L, 56L, 57L, 58L, 59L};
 
         for(int i = 0; i < ultimosMinutosHora.length; i++){
             if(minuto == ultimosMinutosHora[i]){
@@ -35,12 +36,17 @@ public class Util {
         return false;
     }
 
-    public static Boolean verificarPorcentagemPadrao(Double total, Integer contReds, Integer contEntradas, Integer contGrens) {
-        Integer quantidadeReds = (contReds*7)+2;
+    public static Boolean verificarPorcentagemPadrao(Double total, Long contReds, Long contEntradas, Long contGrens) {
+        Long quantidadeReds = (contReds*7)+5;
 
-        if(contGrens > quantidadeReds){
+        if(!(total > 90)){
+            return false;
+        }
+
+        if((contGrens > quantidadeReds) && contEntradas > 10){
             return true;
         }
+
 
         return false;
     }
@@ -50,6 +56,10 @@ public class Util {
         e.setContGrens(estatisticas.getContGrens());
         e.setContReds(estatisticas.getContReds());
         e.setTotal(estatisticas.getTotal());
+
+        if(estatisticas.getTotal().isNaN()){
+            e.setTotal(0.0);
+        }
 
         return e;
 
@@ -66,4 +76,13 @@ public class Util {
         return mensagemTelegram;
     }
 
+    public static boolean isPadraoQuinto(AnalisePadroes analise) {
+        int indexInicial = analise.getPadrao().length() - 6;
+
+        if(analise.getPadrao().substring(indexInicial).toLowerCase().equals("quinto")){
+            return true;
+        }
+        return false;
+
+    }
 }

@@ -2,6 +2,7 @@ package com.roboAnalises.service;
 
 import com.roboAnalises.domain.AnalisePadroes;
 import com.roboAnalises.domain.Estatisticas;
+import com.roboAnalises.domain.Score;
 import com.roboAnalises.domain.VerificarEntradas;
 import com.roboAnalises.domain.enums.Apostas;
 import com.roboAnalises.domain.enums.LigasEnum;
@@ -43,36 +44,96 @@ public class VerificarPadroesService {
         List<Jogos> jogos  = new ApiVsStatsService().getUltimosJogosTodasLigas();
 
         verificarPadraoResultadosIguaisEntraQuinaOver25(jogos);
-        verificarPadrao0x0IntervaloParaOver25NaQuina(jogos);
-        verificarPadrao2x2ParaOver25EmCima(jogos);
-        verificarPadrao3x1CasaParaOver25EmCima(jogos);
-        verificarPadrao1x3ForaParaOver25EmCima(jogos);
-        verificarPadrao0x0Intervalo0x1JogoTodoParaOver25Quina(jogos);
-        verificarPadrao0x0Intervalo1x0JogoTodoParaOver25Quina(jogos);
-        verificarPadrao0x0Intervalo2x0JogoTodoParaOver25Quina(jogos);
-        verificarPadrao0x1Intervalo0x1JogoTodoParaOver25Quina(jogos);
-        verificarPadrao0x1Intervalo0x2JogoTodoParaOver25Quina(jogos);
-        verificarPadrao1x0Intervalo2x0JogoTodoParaOver25Quina(jogos);
-        verificarPadrao1x1Intervalo1x1JogoTodoParaOver25Quina(jogos);
 
-        verficarPadrao1x1IntervaloParaAmbasNaQuina(jogos);
-        verificarPadrao0x0IntervaloParaAmbasNaQuina(jogos);
-        verficarPadrao2x0CasaParaAmbasNaQuina(jogos);
-        verficarPadrao0x2ForaParaAmbasNaQuina(jogos);
-        verficarPadrao0x0ParaAmbasNaQuina(jogos);
-        verificarPadrao1x3ForaParaAmbasEmCima(jogos);
-        verificarPadrao2x2ParaAmbasEmCima(jogos);
-        verificarPadrao3x1CasaParaAmbasEmCima(jogos);
-        verificarPadrao2x0CasaParaOver25Quinto(jogos);
+        verificarPadrao(jogos, 2, 0, Padrao.OVER25_2x0_JOGOTODO_QUINTO, Apostas.OVER25, TipoEntrada.QUINTO_JOGO, true);
+        verificarPadrao(jogos, 3, 1, Padrao.AMBAS_3x1_JOGOTODO_CIMA, Apostas.AMBASMARCAM, TipoEntrada.CIMA_MAIS_UM, true);
+        verificarPadrao(jogos, 2, 2, Padrao.AMBAS_2x2_JOGOTODO_CIMA, Apostas.AMBASMARCAM, TipoEntrada.CIMA_MAIS_UM, true);
+        verificarPadrao(jogos, 1, 3, Padrao.AMBAS_1x3_JOGOTODO_CIMA, Apostas.AMBASMARCAM, TipoEntrada.CIMA_MAIS_UM, true);
+        verificarPadrao(jogos, 0, 0, Padrao.AMBAS_0x0_JOGOTODO_QUINA, Apostas.AMBASMARCAM, TipoEntrada.QUINA, true);
+        verificarPadrao(jogos, 0, 2, Padrao.AMBAS_0x2FORA_JOGOTODO_QUINA, Apostas.AMBASMARCAM, TipoEntrada.QUINA, true);
+        verificarPadrao(jogos, 2, 0, Padrao.AMBAS_2x0CASA_JOGOTODO_QUINA, Apostas.AMBASMARCAM, TipoEntrada.QUINA, true);
+        verificarPadrao(jogos, 0, 0, Padrao.AMBAS_0x0_INTERVALO_QUINA, Apostas.AMBASMARCAM, TipoEntrada.QUINA, false);
+        verificarPadrao(jogos, 1, 1, Padrao.AMBAS_1x1_INTERVALO_QUINA, Apostas.AMBASMARCAM, TipoEntrada.QUINA, false);
+        verificarPadrao(jogos, 2, 2, Padrao.OVER25_2x2_JOGOTODO_CIMA, Apostas.OVER25, TipoEntrada.CIMA_MAIS_UM, true);
+        verificarPadrao(jogos, 3, 1, Padrao.OVER25_3x1_JOGOTODO_CIMA, Apostas.OVER25, TipoEntrada.CIMA_MAIS_UM, true);
+        verificarPadrao(jogos, 1, 3, Padrao.OVER25_1x3_JOGOTODO_CIMA, Apostas.OVER25, TipoEntrada.CIMA_MAIS_UM, true);
+        verificarPadrao(jogos, 0, 0, Padrao.OVER25_0x0_INTERVALO_QUINA, Apostas.OVER25, TipoEntrada.QUINA, false);
+        verificarPadrao(jogos, 0, 2, Padrao.Over25_0x2_JOGOTODO_QUINTO, Apostas.OVER25, TipoEntrada.QUINTO_JOGO, true);
+        verificarPadrao(jogos, 1, 2, Padrao.Over25_1x2_JOGOTODO_QUINTO, Apostas.OVER25, TipoEntrada.QUINTO_JOGO, true);
+        verificarPadrao(jogos, 2, 3, Padrao.Over25_2x3_JOGOTODO_QUINTO, Apostas.OVER25, TipoEntrada.QUINTO_JOGO, true);
+        verificarPadrao(jogos, 2, 0, Padrao.AMBAS_2x0_JOGOTODO_QUINTO, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO, true);
+        verificarPadrao(jogos, 3, 0, Padrao.AMBAS_3x0_JOGOTODO_QUINTO, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO, true);
+        verificarPadrao(jogos, 0, 2, Padrao.AMBAS_0x2_JOGOTODO_QUINTO, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO, true);
+        verificarPadrao(jogos, 0, 1, Padrao.AMBAS_0x1_JOGOTODO_QUINTO, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO, true);
+        verificarPadrao(jogos, 1, 2, Padrao.AMBAS_1x2_JOGOTODO_QUINTO, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO, true);
+        verificarPadrao(jogos, 1, 3, Padrao.AMBAS_1x3_JOGOTODO_QUINTO, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO, true);
+        verificarPadrao(jogos, 2, 3, Padrao.AMBAS_2x3_JOGOTODO_QUINTO, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO, true);
+        verificarPadrao(jogos, 1, 0, Padrao.AMBAS_1x0_INTERVALO_QUINA, Apostas.AMBASMARCAM, TipoEntrada.QUINA, false);
+        verificarPadrao(jogos, 2, 0, Padrao.AMBAS_2x0_INTERVALO_QUINA, Apostas.AMBASMARCAM, TipoEntrada.QUINA, false);
+        verificarPadrao(jogos, 1, 2, Padrao.AMBAS_1x2_JOGOTODO_QUINA, Apostas.AMBASMARCAM, TipoEntrada.QUINA, true);
+        verificarPadrao(jogos, 2, 2, Padrao.AMBAS_2x2_JOGOTODO_QUINA, Apostas.AMBASMARCAM, TipoEntrada.QUINA, true);
+        verificarPadrao(jogos, 2, 1, Padrao.AMBAS_2x1_JOGOTODO_QUINA, Apostas.AMBASMARCAM, TipoEntrada.QUINA, true);
+        verificarPadrao(jogos, 0, 2, Padrao.AMBAS_0x2_INTERVALO_CIMA, Apostas.AMBASMARCAM, TipoEntrada.CIMA_MAIS_UM, false);
+        verificarPadrao(jogos, 1, 2, Padrao.AMBAS_1x2_JOGOTODO_CIMA, Apostas.AMBASMARCAM, TipoEntrada.CIMA_MAIS_UM, true);
+        verificarPadrao(jogos, 3, 0, Padrao.AMBAS_3x0_JOGOTODO_CIMA, Apostas.AMBASMARCAM, TipoEntrada.CIMA_MAIS_UM, true);
+        verificarPadrao(jogos, 0, 1, Padrao.AMBAS_0x1_INTERVALO_QUINTO, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO, false);
+        verificarPadrao(jogos, 0, 2, Padrao.AMBAS_0x2_INTERVALO_QUINTO, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO, false);
+        verificarPadrao(jogos, 3, 1, Padrao.AMBAS_3x1_JOGOTODO_QUINTO, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO, true);
+        verificarPadrao(jogos, 2, 0, Padrao.AMBAS_2x0_INTERVALO_QUINTO_HORA_ANTERIOR, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO_HORA_ANTERIOR, false);
+        verificarPadrao(jogos, 0, 0, Padrao.AMBAS_0x0_JOGOTODO_QUINTO_HORA_ANTERIOR, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO_HORA_ANTERIOR, true);
+        verificarPadrao(jogos, 0, 2, Padrao.AMBAS_0x2_JOGOTODO_QUINTO_HORA_ANTERIOR, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO_HORA_ANTERIOR, true);
+        verificarPadrao(jogos, 3, 1, Padrao.AMBAS_3x1_JOGOTODO_QUINTO_HORA_ANTERIOR, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO_HORA_ANTERIOR, true);
+        verificarPadrao(jogos, 2, 1, Padrao.OVER25_2x1_JOGOTODO_QUINA, Apostas.OVER25, TipoEntrada.QUINA, true);
+        verificarPadrao(jogos, 2, 2, Padrao.OVER25_2x2_JOGOTODO_QUINA, Apostas.OVER25, TipoEntrada.QUINA, true);
+        verificarPadrao(jogos, 1, 1, Padrao.OVER25_1x1_INTERVALO_QUINA, Apostas.OVER25, TipoEntrada.QUINA, false);
+        verificarPadrao(jogos, 0, 2, Padrao.OVER25_0x2_INTERVALO_CIMA, Apostas.OVER25, TipoEntrada.CIMA_MAIS_UM, false);
+        verificarPadrao(jogos, 2, 1, Padrao.OVER25_2x1_JOGOTODO_CIMA, Apostas.OVER25, TipoEntrada.CIMA_MAIS_UM, true);
+        verificarPadrao(jogos, 0, 3, Padrao.OVER25_0x3_JOGOTODO_CIMA, Apostas.OVER25, TipoEntrada.CIMA_MAIS_UM, true);
+        verificarPadrao(jogos, 0, 3, Padrao.Over25_0x3_JOGOTODO_QUINTO, Apostas.OVER25, TipoEntrada.QUINTO_JOGO, true);
+        verificarPadrao(jogos, 2, 2, Padrao.Over25_2x2_JOGOTODO_QUINTO, Apostas.OVER25, TipoEntrada.QUINTO_JOGO, true);
+        verificarPadrao(jogos, 3, 1, Padrao.Over25_3x1_JOGOTODO_QUINTO, Apostas.OVER25, TipoEntrada.QUINTO_JOGO, true);
+
+        verificarApostaIntervaloEFullTime(jogos, 0, 0, 0, 1, Padrao.OVER25_0x0INTERVALO_0x1JOGOTODO_QUINA, Apostas.OVER25, TipoEntrada.QUINA);
+        verificarApostaIntervaloEFullTime(jogos, 0, 0, 1, 0, Padrao.OVER25_0x0INTERVALO_1x0JOGOTODO_QUINA, Apostas.OVER25, TipoEntrada.QUINA);
+        verificarApostaIntervaloEFullTime(jogos, 0, 0, 2, 0, Padrao.OVER25_0x0INTERVALO_2x0JOGOTODO_QUINA, Apostas.OVER25, TipoEntrada.QUINA);
+        verificarApostaIntervaloEFullTime(jogos, 0, 1, 0, 1, Padrao.OVER25_0x1INTERVALO_0x1JOGOTODO_QUINA, Apostas.OVER25, TipoEntrada.QUINA);
+        verificarApostaIntervaloEFullTime(jogos, 0, 1, 0, 2, Padrao.OVER25_0x1INTERVALO_0x2JOGOTODO_QUINA, Apostas.OVER25, TipoEntrada.QUINA);
+        verificarApostaIntervaloEFullTime(jogos, 1, 0, 2, 0, Padrao.OVER25_1x0INTERVALO_2x0JOGOTODO_QUINA, Apostas.OVER25, TipoEntrada.QUINA);
+        verificarApostaIntervaloEFullTime(jogos, 1, 1, 1, 1, Padrao.OVER25_1x1INTERVALO_1x1JOGOTODO_QUINA, Apostas.OVER25, TipoEntrada.QUINA);
+        verificarApostaIntervaloEFullTime(jogos, 0, 0, 1, 0, Padrao.OVER25_0x0INTERVALO_1x0JOGOTODO_QUINTO, Apostas.OVER25, TipoEntrada.QUINTO_JOGO);
+        verificarApostaIntervaloEFullTime(jogos, 0, 2, 0, 2, Padrao.OVER25_0x2INTERVALO_0x2JOGOTODO_QUINTO, Apostas.OVER25, TipoEntrada.QUINTO_JOGO);
+        verificarApostaIntervaloEFullTime(jogos, 1, 0, 1, 1, Padrao.OVER25_1x0INTERVALO_1x1JOGOTODO_QUINTO, Apostas.OVER25, TipoEntrada.QUINTO_JOGO);
+        verificarApostaIntervaloEFullTime(jogos, 1, 0, 2, 0, Padrao.OVER25_1x0INTERVALO_2x0JOGOTODO_QUINTO, Apostas.OVER25, TipoEntrada.QUINTO_JOGO);
+        verificarApostaIntervaloEFullTime(jogos, 0, 0, 0, 1, Padrao.AMBAS_0x0INTERVALO_0x1JOGOTODO_QUINA, Apostas.AMBASMARCAM, TipoEntrada.QUINA);
+        verificarApostaIntervaloEFullTime(jogos, 0, 1, 1, 2, Padrao.AMBAS_0x1INTERVALO_1x2JOGOTODO_QUINA, Apostas.AMBASMARCAM, TipoEntrada.QUINA);
+        verificarApostaIntervaloEFullTime(jogos, 1, 1, 1, 1, Padrao.AMBAS_1x1INTERVALO_1x1JOGOTODO_QUINA, Apostas.AMBASMARCAM, TipoEntrada.QUINA);
+        verificarApostaIntervaloEFullTime(jogos, 1, 1, 1, 1, Padrao.AMBAS_1x1INTERVALO_1x1JOGOTODO_CIMA, Apostas.AMBASMARCAM, TipoEntrada.CIMA_MAIS_UM);
+        verificarApostaIntervaloEFullTime(jogos, 0, 0, 0, 1, Padrao.AMBAS_0x0INTERVALO_0x1JOGOTODO_CIMA, Apostas.AMBASMARCAM, TipoEntrada.CIMA_MAIS_UM);
+        verificarApostaIntervaloEFullTime(jogos, 0, 1, 0, 1, Padrao.AMBAS_0x1INTERVALO_0x1JOGOTODO_CIMA, Apostas.AMBASMARCAM, TipoEntrada.CIMA_MAIS_UM);
+        verificarApostaIntervaloEFullTime(jogos, 0, 1, 0, 2, Padrao.AMBAS_0x1INTERVALO_0x2JOGOTODO_CIMA, Apostas.AMBASMARCAM, TipoEntrada.CIMA_MAIS_UM);
+        verificarApostaIntervaloEFullTime(jogos, 0, 1, 1, 2, Padrao.AMBAS_0x1INTERVALO_1x2JOGOTODO_CIMA, Apostas.AMBASMARCAM, TipoEntrada.CIMA_MAIS_UM);
+        verificarApostaIntervaloEFullTime(jogos, 0, 0, 1, 1, Padrao.AMBAS_0x0INTERVALO_1x1JOGOTODO_QUINTO, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO);
+        verificarApostaIntervaloEFullTime(jogos, 1, 0, 2, 0, Padrao.AMBAS_1x0INTERVALO_2x0JOGOTODO_QUINTO, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO);
+        verificarApostaIntervaloEFullTime(jogos, 0, 1, 0, 2, Padrao.AMBAS_0x1INTERVALO_0x2JOGOTODO_QUINTO, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO);
+        verificarApostaIntervaloEFullTime(jogos, 0, 0, 1, 1, Padrao.AMBAS_0x0INTERVALO_1x1JOGOTODO_QUINTO_HORA_ANTERIOR, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO_HORA_ANTERIOR);
+        verificarApostaIntervaloEFullTime(jogos, 0, 1, 0, 2, Padrao.AMBAS_0x1INTERVALO_0x2JOGOTODO_QUINTO_HORA_ANTERIOR, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO_HORA_ANTERIOR);
+        verificarApostaIntervaloEFullTime(jogos, 0, 1, 1, 1, Padrao.AMBAS_0x1INTERVALO_1x1JOGOTODO_QUINTO_HORA_ANTERIOR, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO_HORA_ANTERIOR);
+        verificarApostaIntervaloEFullTime(jogos, 2, 0, 2, 0, Padrao.AMBAS_2x0INTERVALO_2x0JOGOTODO_QUINTO_HORA_ANTERIOR, Apostas.AMBASMARCAM, TipoEntrada.QUINTO_JOGO_HORA_ANTERIOR);
+        verificarApostaIntervaloEFullTime(jogos, 0, 0, 0, 1, Padrao.OVER25_0x0INTERVALO_0x1JOGOTODO_CIMA, Apostas.OVER25, TipoEntrada.CIMA_MAIS_UM);
+        verificarApostaIntervaloEFullTime(jogos, 1, 0, 1, 1, Padrao.OVER25_1x0INTERVALO_1x1JOGOTODO_CIMA, Apostas.OVER25, TipoEntrada.CIMA_MAIS_UM);
+        verificarApostaIntervaloEFullTime(jogos, 1, 1, 1, 1, Padrao.OVER25_1x1INTERVALO_1x1JOGOTODO_CIMA, Apostas.OVER25, TipoEntrada.CIMA_MAIS_UM);
+        verificarApostaIntervaloEFullTime(jogos, 0, 1, 0, 1, Padrao.OVER25_0x1INTERVALO_0x1JOGOTODO_QUINTO, Apostas.OVER25, TipoEntrada.QUINTO_JOGO);
+        verificarApostaIntervaloEFullTime(jogos, 1, 1, 1, 1, Padrao.OVER25_1x1INTERVALO_1x1JOGOTODO_QUINTO, Apostas.OVER25, TipoEntrada.QUINTO_JOGO);
+        verificarApostaIntervaloEFullTime(jogos, 0, 1, 1, 1, Padrao.OVER25_0x1INTERVALO_1x1JOGOTODO_QUINTO_HORA_ANTERIOR, Apostas.OVER25, TipoEntrada.QUINTO_JOGO_HORA_ANTERIOR);
 
     }
 
-    private void verificarPadrao2x0CasaParaOver25Quinto(List<Jogos> jogos) {
+    public void verificarPadrao(List<Jogos> jogos, int homeScore, int awayScore, String padrao, String aposta, String tipoEntrada, Boolean isFullTime) {
         for (Jogos jogo : jogos) {
-            try{
-                if(jogo.getScoreFullTime().getHome() == 2 && jogo.getScoreFullTime().getAway() == 0){
-                    salvarCorretamenteNoBanco(jogo.getHour(), jogo.getMinute(), jogo.getLiga(), Apostas.OVER25, TipoEntrada.QUINTO_JOGO, Padrao.OVER25_2x0_JOGOTODO_QUINTO);
-
+            try {
+                Score score = isFullTime ? jogo.getScoreFullTime() : jogo.getScoreHalfTime();
+                if (score.getHome() == homeScore && score.getAway() == awayScore) {
+                    salvarCorretamenteNoBanco(jogo.getHour(), jogo.getMinute(), jogo.getLiga(), aposta, tipoEntrada, padrao);
                 }
             }catch (NullPointerException e){
                 continue;
@@ -81,110 +142,14 @@ public class VerificarPadroesService {
         verificarEntradas(verificarEntradasService.findAllEntradas());
     }
 
-    private void verificarPadrao3x1CasaParaAmbasEmCima(List<Jogos> jogos) {
+    public void verificarApostaIntervaloEFullTime(List<Jogos> jogos, int homeScoreHalf, int awayScoreHalf, int homeScoreFull, int awayScoreFull, String padrao, String aposta, String tipoEntrada) {
         for (Jogos jogo : jogos) {
-            try{
-                if(jogo.getScoreFullTime().getHome() == 3 && jogo.getScoreFullTime().getAway() == 1){
-                    salvarCorretamenteNoBanco(jogo.getHour(), jogo.getMinute(), jogo.getLiga(), Apostas.AMBASMARCAM, TipoEntrada.CIMA_MAIS_UM, Padrao.AMBAS_3x1_JOGOTODO_CIMA);
-
-                }
-            }catch (NullPointerException e){
-                continue;
-            }
-        }
-        verificarEntradas(verificarEntradasService.findAllEntradas());
-    }
-
-    private void verificarPadrao2x2ParaAmbasEmCima(List<Jogos> jogos) {
-        for (Jogos jogo : jogos) {
-            try{
-                if(jogo.getScoreFullTime().getHome() == 2 && jogo.getScoreFullTime().getAway() == 2){
-                    salvarCorretamenteNoBanco(jogo.getHour(), jogo.getMinute(), jogo.getLiga(), Apostas.AMBASMARCAM, TipoEntrada.CIMA_MAIS_UM, Padrao.AMBAS_2x2_JOGOTODO_CIMA);
-
-                }
-            }catch (NullPointerException e){
-                continue;
-            }
-        }
-        verificarEntradas(verificarEntradasService.findAllEntradas());
-    }
-
-    private void verificarPadrao1x3ForaParaAmbasEmCima(List<Jogos> jogos) {
-        for (Jogos jogo : jogos) {
-            try{
-                if(jogo.getScoreFullTime().getHome() == 1 && jogo.getScoreFullTime().getAway() == 3){
-                    salvarCorretamenteNoBanco(jogo.getHour(), jogo.getMinute(), jogo.getLiga(), Apostas.AMBASMARCAM, TipoEntrada.CIMA_MAIS_UM, Padrao.AMBAS_1x3_JOGOTODO_CIMA);
-
-                }
-            }catch (NullPointerException e){
-                continue;
-            }
-        }
-        verificarEntradas(verificarEntradasService.findAllEntradas());
-    }
-
-    private void verficarPadrao0x0ParaAmbasNaQuina(List<Jogos> jogos) {
-        for (Jogos jogo : jogos) {
-            try{
-                if(jogo.getScoreFullTime().getHome() == 0 && jogo.getScoreFullTime().getAway() == 0){
-                    salvarCorretamenteNoBanco(jogo.getHour(), jogo.getMinute(), jogo.getLiga(), Apostas.AMBASMARCAM, TipoEntrada.QUINA, Padrao.AMBAS_0x0_JOGOTODO_QUINA);
-
-                }
-            }catch (NullPointerException e){
-                continue;
-            }
-        }
-        verificarEntradas(verificarEntradasService.findAllEntradas());
-    }
-
-    private void verficarPadrao0x2ForaParaAmbasNaQuina(List<Jogos> jogos) {
-        for (Jogos jogo : jogos) {
-            try{
-                if(jogo.getScoreFullTime().getHome() == 0 && jogo.getScoreFullTime().getAway() == 2){
-                    salvarCorretamenteNoBanco(jogo.getHour(), jogo.getMinute(), jogo.getLiga(), Apostas.AMBASMARCAM, TipoEntrada.QUINA, Padrao.AMBAS_0x2FORA_JOGOTODO_QUINA);
-
-                }
-            }catch (NullPointerException e){
-                continue;
-            }
-        }
-        verificarEntradas(verificarEntradasService.findAllEntradas());
-    }
-
-    private void verficarPadrao2x0CasaParaAmbasNaQuina(List<Jogos> jogos) {
-        for (Jogos jogo : jogos) {
-            try{
-                if(jogo.getScoreFullTime().getHome() == 2 && jogo.getScoreFullTime().getAway() == 0){
-                    salvarCorretamenteNoBanco(jogo.getHour(), jogo.getMinute(), jogo.getLiga(), Apostas.AMBASMARCAM, TipoEntrada.QUINA, Padrao.AMBAS_2x0CASA_JOGOTODO_QUINA);
-
-                }
-            }catch (NullPointerException e){
-                continue;
-            }
-        }
-        verificarEntradas(verificarEntradasService.findAllEntradas());
-    }
-
-    private void verificarPadrao0x0IntervaloParaAmbasNaQuina(List<Jogos> jogos) {
-        for (Jogos jogo : jogos) {
-            try{
-                if(jogo.getScoreHalfTime().getHome() == 0 && jogo.getScoreHalfTime().getAway() == 0){
-                    salvarCorretamenteNoBanco(jogo.getHour(), jogo.getMinute(), jogo.getLiga(), Apostas.AMBASMARCAM, TipoEntrada.QUINA, Padrao.AMBAS_0x0_INTERVALO_QUINA);
-
-                }
-            }catch (NullPointerException e){
-                continue;
-            }
-        }
-        verificarEntradas(verificarEntradasService.findAllEntradas());
-    }
-
-    private void verficarPadrao1x1IntervaloParaAmbasNaQuina(List<Jogos> jogos) {
-        for (Jogos jogo : jogos) {
-            try{
-                if(jogo.getScoreHalfTime().getHome() == 1 && jogo.getScoreHalfTime().getAway() == 1){
-                    salvarCorretamenteNoBanco(jogo.getHour(), jogo.getMinute(), jogo.getLiga(), Apostas.AMBASMARCAM, TipoEntrada.QUINA, Padrao.AMBAS_1x1_INTERVALO_QUINA);
-
+            try {
+                if (jogo.getScoreHalfTime().getHome() == homeScoreHalf &&
+                        jogo.getScoreHalfTime().getAway() == awayScoreHalf &&
+                        jogo.getScoreFullTime().getHome() == homeScoreFull &&
+                        jogo.getScoreFullTime().getAway() == awayScoreFull) {
+                    salvarCorretamenteNoBanco(jogo.getHour(), jogo.getMinute(), jogo.getLiga(), aposta, tipoEntrada, padrao);
                 }
             }catch (NullPointerException e){
                 continue;
@@ -213,178 +178,6 @@ public class VerificarPadroesService {
         verificarEntradas(verificarEntradasService.findAllEntradas());
     }
 
-    private void verificarPadrao0x0IntervaloParaOver25NaQuina(List<Jogos> jogos) {
-        for (Jogos jogo : jogos) {
-            try{
-                if(jogo.getScoreHalfTime().getHome() == 0 && jogo.getScoreHalfTime().getAway() == 0){
-                    salvarCorretamenteNoBanco(jogo.getHour(), jogo.getMinute(), jogo.getLiga(), Apostas.OVER25, TipoEntrada.QUINA, Padrao.OVER25_0x0_INTERVALO_QUINA);
-
-                }
-            }catch (NullPointerException e){
-                continue;
-            }
-        }
-        verificarEntradas(verificarEntradasService.findAllEntradas());
-    }
-
-    private void verificarPadrao2x2ParaOver25EmCima(List<Jogos> jogos) {
-        for (Jogos jogo : jogos) {
-            try{
-                if(jogo.getScoreFullTime().getHome() == 2 && jogo.getScoreFullTime().getAway() == 2){
-                    salvarCorretamenteNoBanco(jogo.getHour(), jogo.getMinute(), jogo.getLiga(), Apostas.OVER25, TipoEntrada.CIMA_MAIS_UM, Padrao.OVER25_2x2_JOGOTODO_CIMA);
-
-                }
-            }catch (NullPointerException e){
-                continue;
-            }
-        }
-        verificarEntradas(verificarEntradasService.findAllEntradas());
-    }
-
-    private void verificarPadrao3x1CasaParaOver25EmCima(List<Jogos> jogos) {
-        for (Jogos jogo : jogos) {
-            try{
-                if(jogo.getScoreFullTime().getHome() == 3 && jogo.getScoreFullTime().getAway() == 1){
-                    salvarCorretamenteNoBanco(jogo.getHour(), jogo.getMinute(), jogo.getLiga(), Apostas.OVER25, TipoEntrada.CIMA_MAIS_UM, Padrao.OVER25_3x1_JOGOTODO_CIMA);
-
-                }
-            }catch (NullPointerException e){
-                continue;
-            }
-        }
-        verificarEntradas(verificarEntradasService.findAllEntradas());
-    }
-
-    private void verificarPadrao1x3ForaParaOver25EmCima(List<Jogos> jogos) {
-        for (Jogos jogo : jogos) {
-            try{
-                if(jogo.getScoreFullTime().getHome() == 1 && jogo.getScoreFullTime().getAway() == 3){
-                    salvarCorretamenteNoBanco(jogo.getHour(), jogo.getMinute(), jogo.getLiga(), Apostas.OVER25, TipoEntrada.CIMA_MAIS_UM, Padrao.OVER25_1x3_JOGOTODO_CIMA);
-
-                }
-            }catch (NullPointerException e){
-                continue;
-            }
-        }
-        verificarEntradas(verificarEntradasService.findAllEntradas());
-    }
-
-
-    private void verificarPadrao0x0Intervalo0x1JogoTodoParaOver25Quina(List<Jogos> jogos) {
-        for (Jogos jogo : jogos) {
-            try{
-                if(jogo.getScoreHalfTime().getHome() == 0 && jogo.getScoreHalfTime().getAway() == 0){
-                    if(jogo.getScoreFullTime().getHome() == 0 && jogo.getScoreFullTime().getAway() == 1) {
-                        salvarCorretamenteNoBanco(jogo.getHour(), jogo.getMinute(), jogo.getLiga(), Apostas.OVER25, TipoEntrada.QUINA, Padrao.OVER25_0x0INTERVALO_0x1JOGOTODO_QUINA);
-                    }
-                }
-            }catch (NullPointerException e){
-                continue;
-            }
-        }
-        verificarEntradas(verificarEntradasService.findAllEntradas());
-    }
-
-
-    private void verificarPadrao0x0Intervalo1x0JogoTodoParaOver25Quina(List<Jogos> jogos) {
-        for (Jogos jogo : jogos) {
-            try{
-                if(jogo.getScoreHalfTime().getHome() == 0 && jogo.getScoreHalfTime().getAway() == 0){
-                    if(jogo.getScoreFullTime().getHome() == 1 && jogo.getScoreFullTime().getAway() == 0){
-                        salvarCorretamenteNoBanco(jogo.getHour(), jogo.getMinute(), jogo.getLiga(), Apostas.OVER25, TipoEntrada.QUINA, Padrao.OVER25_0x0INTERVALO_1x0JOGOTODO_QUINA);
-                    }
-                }
-            }catch (NullPointerException e){
-                continue;
-            }
-        }
-        verificarEntradas(verificarEntradasService.findAllEntradas());
-    }
-
-
-
-    private void verificarPadrao0x0Intervalo2x0JogoTodoParaOver25Quina(List<Jogos> jogos) {
-        for (Jogos jogo : jogos) {
-            try{
-                if(jogo.getScoreHalfTime().getHome() == 0 && jogo.getScoreHalfTime().getAway() == 0){
-                    if(jogo.getScoreFullTime().getHome() == 2 && jogo.getScoreFullTime().getAway() == 0){
-                        salvarCorretamenteNoBanco(jogo.getHour(), jogo.getMinute(), jogo.getLiga(), Apostas.OVER25, TipoEntrada.QUINA, Padrao.OVER25_0x0INTERVALO_2x0JOGOTODO_QUINA);
-                    }
-                }
-            }catch (NullPointerException e){
-                continue;
-            }
-        }
-        verificarEntradas(verificarEntradasService.findAllEntradas());
-    }
-
-
-    private void verificarPadrao0x1Intervalo0x1JogoTodoParaOver25Quina(List<Jogos> jogos) {
-        for (Jogos jogo : jogos) {
-            try{
-                if(jogo.getScoreHalfTime().getHome() == 0 && jogo.getScoreHalfTime().getAway() == 1){
-                    if(jogo.getScoreFullTime().getHome() == 0 && jogo.getScoreFullTime().getAway() == 1){
-                        salvarCorretamenteNoBanco(jogo.getHour(), jogo.getMinute(), jogo.getLiga(), Apostas.OVER25, TipoEntrada.QUINA, Padrao.OVER25_0x1INTERVALO_0x1JOGOTODO_QUINA);
-                    }
-                }
-            }catch (NullPointerException e){
-                continue;
-            }
-        }
-        verificarEntradas(verificarEntradasService.findAllEntradas());
-    }
-
-
-
-    private void verificarPadrao0x1Intervalo0x2JogoTodoParaOver25Quina(List<Jogos> jogos) {
-        for (Jogos jogo : jogos) {
-            try{
-                if(jogo.getScoreHalfTime().getHome() == 0 && jogo.getScoreHalfTime().getAway() == 1){
-                    if(jogo.getScoreFullTime().getHome() == 0 && jogo.getScoreFullTime().getAway() == 2){
-                        salvarCorretamenteNoBanco(jogo.getHour(), jogo.getMinute(), jogo.getLiga(), Apostas.OVER25, TipoEntrada.QUINA, Padrao.OVER25_0x1INTERVALO_0x2JOGOTODO_QUINA);
-                    }
-                }
-            }catch (NullPointerException e){
-                continue;
-            }
-        }
-        verificarEntradas(verificarEntradasService.findAllEntradas());
-    }
-
-
-    private void verificarPadrao1x0Intervalo2x0JogoTodoParaOver25Quina(List<Jogos> jogos) {
-        for (Jogos jogo : jogos) {
-            try{
-                if(jogo.getScoreHalfTime().getHome() == 1 && jogo.getScoreHalfTime().getAway() == 0){
-                    if(jogo.getScoreFullTime().getHome() == 2 && jogo.getScoreFullTime().getAway() == 0){
-                        salvarCorretamenteNoBanco(jogo.getHour(), jogo.getMinute(), jogo.getLiga(), Apostas.OVER25, TipoEntrada.QUINA, Padrao.OVER25_1x0INTERVALO_2x0JOGOTODO_QUINA);
-                    }
-                }
-            }catch (NullPointerException e){
-                continue;
-            }
-        }
-        verificarEntradas(verificarEntradasService.findAllEntradas());
-    }
-
-    private void verificarPadrao1x1Intervalo1x1JogoTodoParaOver25Quina(List<Jogos> jogos) {
-        for (Jogos jogo : jogos) {
-            try{
-                if(jogo.getScoreHalfTime().getHome() == 1 && jogo.getScoreHalfTime().getAway() == 1){
-                    if(jogo.getScoreFullTime().getHome() == 1 && jogo.getScoreFullTime().getAway() == 1){
-                        salvarCorretamenteNoBanco(jogo.getHour(), jogo.getMinute(), jogo.getLiga(), Apostas.OVER25, TipoEntrada.QUINA, Padrao.OVER25_1x1INTERVALO_1x1JOGOTODO_QUINA);
-                    }
-                }
-            }catch (NullPointerException e){
-                continue;
-            }
-        }
-        verificarEntradas(verificarEntradasService.findAllEntradas());
-    }
-
-
-
-
     public void salvarCorretamenteNoBanco(int hour, int minute, String nomeLiga, String aposta, String tipoEntrada, String padrao)  {
 
         LocalTime lt = LocalTime.of(hour,minute,0);
@@ -405,11 +198,16 @@ public class VerificarPadroesService {
             m1 = lt.getMinute();
             m2 = lt.plusMinutes(3).getMinute();
             m3 = lt.plusMinutes(6).getMinute();
-        }else{
+        }else if(tipoEntrada.equals(TipoEntrada.QUINTO_JOGO)){
             m1 = lt.plusMinutes(15).getMinute();
             m2 = lt.plusMinutes(18).getMinute();
             m3 = lt.plusMinutes(21).getMinute();
             lt = lt.plusMinutes(21);
+        }else if(tipoEntrada.equals(TipoEntrada.QUINTO_JOGO_HORA_ANTERIOR)){
+            lt = lt.plusHours(1);
+            m1 = lt.plusMinutes(15).getMinute();
+            m2 = lt.plusMinutes(18).getMinute();
+            m3 = lt.plusMinutes(21).getMinute();
         }
 
         lt = lt.minusMinutes(3);
@@ -426,13 +224,13 @@ public class VerificarPadroesService {
         entrada.setMinutos(minutos);
         entrada.setAposta(aposta);
         entrada.setPadrao(padrao);
-        entrada.setMinuto1(m1);
-        entrada.setMinuto2(m2);
-        entrada.setMinuto3(m3);
+        entrada.setMinuto1(Long.valueOf(m1));
+        entrada.setMinuto2(Long.valueOf(m2));
+        entrada.setMinuto3(Long.valueOf(m3));
 
         if(verificarEntradasService.verificarEntradaDuplicada(entrada)){
             try {
-                entrada.setIdMessage(0);
+                entrada.setIdMessage(0L);
                 entrada.setFlagFinalizado(false);
                 entrada.setFlagGrem(false);
                 verificarEntradasService.salvarEntrada(entrada);
@@ -496,7 +294,11 @@ public class VerificarPadroesService {
         analisePadroes.setLiga(liga);
         analisePadroes.setIsPorcentagemBoa(Util.verificarPorcentagemPadrao(estatisticas.getTotal(), estatisticas.getContReds(), estatisticas.getContEntradas(), estatisticas.getContGrens()));
         analisePadroes.setEstatisticas(Util.estatisticaCompleto(estatisticas));
-        analisePadroesService.salvarEntrada(analisePadroes);
+       try{
+           analisePadroesService.salvarEntrada(analisePadroes);
+       }catch (Exception e){
+           return;
+       }
     }
 
     public Estatisticas createEstatisticas(List<VerificarEntradas> entradas, String liga){
@@ -510,11 +312,11 @@ public class VerificarPadroesService {
         return logicaParaFazerUpdateDaEntrada(entradas,ultimosJogos);
     }
 
-    private Estatisticas logicaParaFazerUpdateDaEntrada(List<VerificarEntradas> entradas, List<Jogos> ultimosJogos) {
+    public Estatisticas logicaParaFazerUpdateDaEntrada(List<VerificarEntradas> entradas, List<Jogos> ultimosJogos) {
         Estatisticas estatisticas = new Estatisticas();
 
         for (VerificarEntradas entrada : entradas) {
-            List<Integer> minutos = new ArrayList<>();
+            List<Long> minutos = new ArrayList<>();
             minutos.add(entrada.getMinuto1());
             minutos.add(entrada.getMinuto2());
             minutos.add(entrada.getMinuto3());
@@ -524,8 +326,8 @@ public class VerificarPadroesService {
             Boolean isEntradaQuebrada = Util.isEntradaQuebrada(entrada.getMinuto1(), entrada.getMinuto3());
 
             if(isEntradaQuebrada){
-                for (Integer minuto : minutos) {
-                    Boolean isMinutoHoraAtualEntrada = Util.isMinutoHoraAtualEntrada(Integer.valueOf(minuto));
+                for (Long minuto : minutos) {
+                    Boolean isMinutoHoraAtualEntrada = Util.isMinutoHoraAtualEntrada(minuto);
                     for (Jogos jogo : ultimosJogos) {
                         try{
                             if(!entrada.getFlagGrem()){
@@ -541,7 +343,7 @@ public class VerificarPadroesService {
                 }
 
             }else{
-                for (Integer minuto : minutos) {
+                for (Long minuto : minutos) {
                     for (Jogos jogo : ultimosJogos) {
                         try {
                             if (!entrada.getFlagGrem()) {
@@ -556,11 +358,11 @@ public class VerificarPadroesService {
             }
 
             if (entrada.getFlagFinalizado()) {
-                estatisticas.addEntradas(1);
+                estatisticas.addEntradas(1L);
                 if (entrada.getFlagGrem()) {
-                    estatisticas.addGrens(1);
+                    estatisticas.addGrens(1L);
                 } else {
-                    estatisticas.addRed(1);
+                    estatisticas.addRed(1L);
                 }
             }
         }
@@ -568,9 +370,9 @@ public class VerificarPadroesService {
         return estatisticas;
     }
 
-    private static void logicaTipoAposta(VerificarEntradas entrada, Jogos jogo, Integer minuto, String hora) {
+    private static void logicaTipoAposta(VerificarEntradas entrada, Jogos jogo, Long minuto, String hora) {
         if (Integer.valueOf(hora) == jogo.getHour()) {
-            if (jogo.getMinute() == Integer.valueOf(minuto)) {
+            if (jogo.getMinute() == minuto) {
                 if(entrada.getAposta().equals(Apostas.EMPATEHT)){
                     if (jogo.getScoreHalfTime().getHome() == jogo.getScoreHalfTime().getAway()) {
                         entrada.setFlagGrem(true);
