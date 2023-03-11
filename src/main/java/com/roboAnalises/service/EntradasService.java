@@ -116,7 +116,7 @@ public class EntradasService {
     }
 
     private static void logicaTipoAposta(Entradas entrada, Jogos jogo, Long minuto, String hora) {
-        if (Integer.valueOf(hora) == jogo.getHour() && Data.entradaEJogoMesmoDia(entrada.getData(), jogo.getIdString())) {
+        if (Integer.valueOf(hora) == jogo.getHour() && Data.entradaEJogoMesmoDia(entrada.getData(), jogo.getIdString()) && entrada.getLiga().equals(jogo.getLiga())) {
             if (jogo.getMinute() == minuto) {
                 if(entrada.getAposta().equals(Apostas.EMPATEHT)){
                     if (jogo.getScoreHalfTime().getHome() == jogo.getScoreHalfTime().getAway()) {
