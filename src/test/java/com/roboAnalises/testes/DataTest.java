@@ -23,4 +23,9 @@ public class DataTest {
         Data.verificarUltimoMinutoJogoMaiorHoraLondresRetornaTrue(22, 38, "2023-03-06");
     }
 
+    @Test
+    public void entradaEJogoMesmoDia() {
+        Data.entradaEJogoMesmoDia("2023-03-12", "2023031104150");
+    }
+
 }

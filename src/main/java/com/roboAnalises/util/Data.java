@@ -183,4 +183,28 @@ public class Data {
         }
         return false;
     }
+
+    public static boolean filtroJogosDiaAtual(String idString) {
+        int diaJogo  = Integer.parseInt(idString.substring(6, 8));
+
+
+        LocalDate ld =  LocalDate.now(ZoneId.of("Europe/London"));
+
+        if(diaJogo != ld.getDayOfMonth()){
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean entradaEJogoMesmoDia(String data, String idString) {
+        int diaJogo  = Integer.parseInt(idString.substring(6, 8));
+        int mesJogo  = Integer.parseInt(idString.substring(4, 6));
+        int diaEntrada = Integer.parseInt(data.substring(8,10));
+        int mesEntrada  = Integer.parseInt(data.substring(5, 7));
+        if(diaEntrada == diaJogo && mesJogo == mesEntrada){
+            return true;
+        }
+
+        return false;
+    }
 }
