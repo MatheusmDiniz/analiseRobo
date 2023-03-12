@@ -15,7 +15,7 @@ public class RestricoesEntradasServiceTest {
 
     @Test
     public void returnTrueIfVerificarMais3RedsSeguidosUltimaHoraAmbas() {
-        List<Jogos> ultimos200Jogos = new ApiVsStatsService(LigasEnum.COPA.getNomeOficial()).getLast200Jogos();
+        List<Jogos> ultimos200Jogos = new ApiVsStatsService(LigasEnum.PREMIER.getNomeOficial()).getLast200Jogos();
         RestricoesEntradasService.returnTrueIfVerificarMais3RedsSeguidosUltimaHora(ultimos200Jogos, Apostas.AMBASMARCAM);
     }
 

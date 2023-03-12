@@ -166,9 +166,9 @@ public class Data {
         LocalDateTime ldBefore = ld.plusHours(1);
 
         if(ldJogo.isAfter(ld) && ldJogo.isBefore(ldBefore)){
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     public static boolean filtroJogosHoraAtual(String idString) {
