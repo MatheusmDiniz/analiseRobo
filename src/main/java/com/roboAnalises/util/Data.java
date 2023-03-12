@@ -157,12 +157,15 @@ public class Data {
         int diaJogo  = Integer.parseInt(idString.substring(6, 8));
         int horaJogo = Integer.parseInt(idString.substring(8, 10));
         int minutoJogo = Integer.parseInt(idString.substring(10, 12));
-        LocalDateTime ldJogo = LocalDateTime.of(anoJogo, mesJogo, diaJogo,horaJogo,minutoJogo);
+        LocalDateTime ldJogo = LocalDateTime.of(anoJogo, mesJogo, diaJogo,horaJogo,0);
 
+        LocalDateTime ldtemp =  LocalDateTime.now(ZoneId.of("Europe/London")).minusHours(1);
 
-        LocalDateTime ld =  LocalDateTime.now(ZoneId.of("Europe/London")).minusHours(1);
+        LocalDateTime ld =  LocalDateTime.of(ldtemp.getYear(), ldtemp.getMonth(), ldtemp.getDayOfMonth(), ldtemp.getHour(),0).minusSeconds(1);
 
-        if(ldJogo.isBefore(ld)){
+        LocalDateTime ldBefore = ld.plusHours(1);
+
+        if(ldJogo.isAfter(ld) && ldJogo.isBefore(ldBefore)){
             return true;
         }
         return false;

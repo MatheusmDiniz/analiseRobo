@@ -37,18 +37,23 @@ public class Util {
     }
 
     public static Boolean verificarPorcentagemPadrao(Double total, Long contReds, Long contEntradas, Long contGrens) {
-        Long quantidadeReds = (contReds*7)+5;
+//        Long quantidadeReds = (contReds*7)+5;
 
-        if(!(total > 90)){
+        if(!(total > 94)){
             return false;
         }
+//
+//        if((contGrens > quantidadeReds) && contEntradas > 10){
+//            return true;
+//        }
 
-        if((contGrens > quantidadeReds) && contEntradas > 10){
+        if(contEntradas > 4){
             return true;
         }
 
 
-        return false;
+
+            return false;
     }
     public static Estatisticas estatisticaCompleto(Estatisticas estatisticas) {
         Estatisticas e = new Estatisticas();

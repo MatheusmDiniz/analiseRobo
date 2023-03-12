@@ -28,4 +28,9 @@ public class DataTest {
         Data.entradaEJogoMesmoDia("2023-03-12", "2023031104150");
     }
 
+    @Test
+    public void filtraApenasJogosUltimaHora() {
+        Data.filtraApenasJogosUltimaHora("2023031217012");
+    }
+
 }

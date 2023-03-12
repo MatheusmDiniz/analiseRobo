@@ -84,9 +84,9 @@ public class TelegramService {
         String hora = String.valueOf(hour);
         String minutos = m1 + "-" + m2 + "-" + m3;
 
-        if(m3 >= 0 && m3 <= 8){
-            return;
-        }
+//        if(m3 >= 0 && m3 <= 8){
+//            return;
+//        }
 
         StringBuilder mensagemTelegram = Util.montarMensagemTelegram(liga, minutos, aposta);
         mensagemTelegram.append("\n-----------------------\n");
@@ -105,6 +105,10 @@ public class TelegramService {
         mensagemTelegram.append("\nMedia Ambas nas ultimas 3 horas: " + mediaAmbas+"\n");
 
         if(RestricoesEntradasService.returnTrueIfVerificarHoraComMaisOverOuAmbasQueAMedia(ultimos200Jogos, aposta, mediaOver25, mediaAmbas)){
+            return;
+        }
+
+        if(RestricoesEntradasService.returnTrueIfAMediaDosMinutosDaEntradaForRuim(jogos,liga, aposta, String.valueOf(m1))){
             return;
         }
 

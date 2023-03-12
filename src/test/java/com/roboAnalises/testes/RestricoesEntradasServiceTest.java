@@ -36,6 +36,11 @@ public class RestricoesEntradasServiceTest {
         RestricoesEntradasService.returnTrueIfVerificarHoraComMaisOverOuAmbasQueAMedia(ultimos200Jogos, Apostas.OVER25, Double.valueOf(12), Double.valueOf(4));
     }
 
+    @Test
+    public void returnTrueIfAMediaDosMinutosDaEntradaForRuim() {
+        List<Jogos> ultimos200Jogos = new ApiVsStatsService().getUltimosJogosTodasLigas();
+        RestricoesEntradasService.returnTrueIfAMediaDosMinutosDaEntradaForRuim(ultimos200Jogos, LigasEnum.COPA.getNome(), Apostas.AMBASMARCAM, "28");
+    }
 
 
 }
