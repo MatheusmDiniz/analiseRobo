@@ -84,9 +84,9 @@ public class TelegramService {
         String hora = String.valueOf(hour);
         String minutos = m1 + "-" + m2 + "-" + m3;
 
-        if(m3 >= 0 && m3 <= 8){
-            return;
-        }
+//        if(m3 >= 0 && m3 <= 8){
+//            return;
+//        }
 
         StringBuilder mensagemTelegram = Util.montarMensagemTelegram(liga, minutos, aposta);
         mensagemTelegram.append("\n-----------------------\n");
