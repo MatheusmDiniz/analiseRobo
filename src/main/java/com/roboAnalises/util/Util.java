@@ -47,7 +47,7 @@ public class Util {
 //            return true;
 //        }
 
-        if(contEntradas > 4){
+        if(contEntradas > 7 && contReds<2){
             return true;
         }
 
