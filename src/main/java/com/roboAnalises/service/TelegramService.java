@@ -94,9 +94,9 @@ public class TelegramService {
 
         List<Jogos> ultimos200Jogos = new ApiVsStatsService(LigasEnum.getLiga(liga).getNomeOficial()).getLast200Jogos();
 
-        if(RestricoesEntradasService.returnTrueIfVerificarMais3RedsSeguidosUltimaHora(ultimos200Jogos, aposta)){
-            return;
-        }
+//        if(RestricoesEntradasService.returnTrueIfVerificarMais3RedsSeguidosUltimaHora(ultimos200Jogos, aposta)){
+//            return;
+//        }
 
         List<Jogos> jogos = new ApiVsStatsService().getUltimosJogosTodasLigas();
         Double mediaOver25 = informacoesService.getMediaOverUltimas3Horas(LigasEnum.getLiga(liga), jogos);
