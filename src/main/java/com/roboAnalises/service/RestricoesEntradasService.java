@@ -184,7 +184,7 @@ public class RestricoesEntradasService {
         }
 
 
-        if(countGrem >=19){
+        if(countGrem >20){
             return false;
         }
 
