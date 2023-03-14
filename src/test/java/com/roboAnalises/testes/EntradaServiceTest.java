@@ -37,6 +37,11 @@ public class EntradaServiceTest {
         entradasService.logicaParaFazerUpdateDaEntrada(entradasMock(), ultimosJogos);
     }
 
+    @Test
+    public void verificarEntradasNaoFinalizadasFinalizadas() {
+        entradasService.verificarEntradasNaoFinalizadasFinalizadas();
+    }
+
     private List<Entradas> entradasMock() {
         List<Entradas> entradas = new ArrayList<>();
         Entradas e = new Entradas();

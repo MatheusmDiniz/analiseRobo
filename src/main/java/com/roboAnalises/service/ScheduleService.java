@@ -51,7 +51,6 @@ public class ScheduleService {
 
     }
 
-
     @Scheduled(fixedDelay = 60000)
     public void principal(){
         System.out.println("Rodando O robo");

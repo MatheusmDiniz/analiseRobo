@@ -84,9 +84,9 @@ public class EntradasService {
                         try{
                             if(!entrada.getFlagGrem()){
                                 if(isMinutoHoraAtualEntrada){
-                                    logicaTipoAposta(entrada, jogo, minuto, entrada.getHora());
+                                    logicaTipoAposta(entrada, jogo, minuto, Integer.valueOf(entrada.getHora()));
                                 }else{
-                                    logicaTipoAposta(entrada, jogo, minuto, entrada.getHora() + 1);
+                                    logicaTipoAposta(entrada, jogo, minuto, Integer.valueOf(entrada.getHora()) + 1);
                                 }
                             }
 
@@ -99,7 +99,7 @@ public class EntradasService {
                     for (Jogos jogo : ultimosJogos) {
                         try {
                             if (!entrada.getFlagGrem()) {
-                                logicaTipoAposta(entrada, jogo, minuto, entrada.getHora());
+                                logicaTipoAposta(entrada, jogo, minuto, Integer.valueOf(entrada.getHora()));
                             }
 
                         } catch (Exception e) {
@@ -115,7 +115,7 @@ public class EntradasService {
         }
     }
 
-    private static void logicaTipoAposta(Entradas entrada, Jogos jogo, Long minuto, String hora) {
+    private static void logicaTipoAposta(Entradas entrada, Jogos jogo, Long minuto, Integer hora) {
         if (Integer.valueOf(hora) == jogo.getHour() && Data.entradaEJogoMesmoDia(entrada.getData(), jogo.getIdString()) && entrada.getLiga().equals(jogo.getLiga())) {
             if (jogo.getMinute() == minuto) {
                 if(entrada.getAposta().equals(Apostas.EMPATEHT)){
