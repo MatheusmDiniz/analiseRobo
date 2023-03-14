@@ -47,7 +47,7 @@ public class Util {
 //            return true;
 //        }
 
-        if(contGrens - quantidadeReds > 20){
+        if(contGrens - quantidadeReds > 15){
             return true;
         }
 
