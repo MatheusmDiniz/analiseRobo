@@ -69,7 +69,7 @@ public class EntradasService {
                 minutos.add(Long.parseLong(s));
             }
 
-            if(!Data.verificarUltimoMinutoJogoMaiorHoraLondresRetornaTrue(Integer.valueOf(entrada.getHora()), Integer.valueOf(String.valueOf(minutos.get(2))), entrada.getData())){
+            if(!Data.verificarUltimoMinutoJogoMaiorHoraLondresMais10MinutosRetornaTrue(Integer.valueOf(entrada.getHora()), Integer.valueOf(String.valueOf(minutos.get(2))), entrada.getData())){
                 continue;
             }
 
