@@ -44,18 +44,18 @@ public class ScheduleService {
     @Autowired
     private final EntradasService entradasService;
 
-//    @Scheduled(fixedDelay = 900000)
-//    public void verificarPadroes(){
-//        System.out.println("Rodando Verificar Padroes");
-//        verificarPadroesService.verificarPadroes();
-//
-//    }
-//
-//    @Scheduled(fixedDelay = 60000)
-//    public void principal(){
-//        System.out.println("Rodando O robo");
-//        roboService.iniciarRobo();
-//    }
+    @Scheduled(fixedDelay = 900000)
+    public void verificarPadroes(){
+        System.out.println("Rodando Verificar Padroes");
+        verificarPadroesService.verificarPadroes();
+
+    }
+
+    @Scheduled(fixedDelay = 60000)
+    public void principal(){
+        System.out.println("Rodando O robo");
+        roboService.iniciarRobo();
+    }
 
     @Scheduled(fixedDelay = 300000)
     public void verificarEntradasFinalizadas(){
