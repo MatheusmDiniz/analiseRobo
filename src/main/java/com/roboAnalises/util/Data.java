@@ -139,10 +139,9 @@ public class Data {
         int anoJogo  = Integer.parseInt(data.substring(0, 4));
         int mesJogo  = Integer.parseInt(data.substring(5, 7));
         int diaJogo  = Integer.parseInt(data.substring(8));
-        LocalDateTime ldJogo = LocalDateTime.of(anoJogo, mesJogo, diaJogo,hora,minutoJogo);
-        ldJogo = ldJogo.plusMinutes(5);
+        LocalDateTime ldJogo = LocalDateTime.of(anoJogo, mesJogo, diaJogo,hora,minutoJogo).plusMinutes(11);
 
-        LocalDateTime ld =  LocalDateTime.now(ZoneId.of("Europe/London")).plusMinutes(10);
+        LocalDateTime ld =  LocalDateTime.now(ZoneId.of("Europe/London"));
 
         if(ldJogo.isBefore(ld)){
             return true;
